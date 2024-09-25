@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 
 NUMBER_OF_NODES = 34
 
@@ -76,6 +77,17 @@ def calculate_degree_distribution(adjacency_list, max_degree=NUMBER_OF_NODES):
     return degree_distribution
 
 
+def plot_degree_distribution(degree_distribution):
+    degrees = [i for i in range(len(degree_distribution))]
+    plt.bar(degrees, degree_distribution, width=1, edgecolor='black')
+    plt.xticks(degrees)
+    plt.xlabel("Degrees (# of connections)")
+    plt.ylabel("# of nodes")
+    plt.title("Karate Club Degree Distribution")
+    plt.tight_layout()
+    plt.show()
+
+
 def main():
     data = read_csv("../datasets/KarateClub.csv")
     formatted_data = format_data(data)
@@ -103,6 +115,8 @@ def main():
     print(f"Degree distribution: {degree_distribution}\n")
     for idx, val in enumerate(degree_distribution):
         print(f"{idx}: {val} \t {val / NUMBER_OF_NODES:.2f} = {val} / {NUMBER_OF_NODES}")
+
+    plot_degree_distribution(degree_distribution)
 
 
 if __name__ == "__main__":
