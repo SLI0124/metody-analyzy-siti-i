@@ -30,6 +30,16 @@ def get_adjacency_matrix(data):
     return matrix
 
 
+def get_adjacency_list(data):
+    adjacency_list = [[] for _ in range(NUMBER_OF_NODES)]
+    for row in data:
+        node1 = int(row[0]) - 1
+        node2 = int(row[1]) - 1
+        adjacency_list[node1].append(node2)
+        adjacency_list[node2].append(node1)
+    return adjacency_list
+
+
 def main():
     data = read_csv("../datasets/KarateClub.csv")
     formatted_data = format_data(data)
@@ -37,6 +47,11 @@ def main():
 
     print("\nAdjacency matrix:")
     for idx, row in enumerate(adjacency_matrix):
+        print(f"{idx + 1}: {row}")
+
+    print("\nAdjacency list:")
+    adjacency_list = get_adjacency_list(formatted_data)
+    for idx, row in enumerate(adjacency_list):
         print(f"{idx + 1}: {row}")
 
 
