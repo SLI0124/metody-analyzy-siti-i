@@ -1,5 +1,7 @@
 import csv
 
+NUMBER_OF_NODES = 34
+
 
 def read_csv(file_path):
     result = []
@@ -10,10 +12,32 @@ def read_csv(file_path):
     return result
 
 
+def format_data(data):
+    result = []
+    for row in data:
+        split_row = row[0].split(";")
+        result.append(split_row)
+    return result
+
+
+def get_adjacency_matrix(data):
+    matrix = [[0 for _ in range(NUMBER_OF_NODES)] for _ in range(NUMBER_OF_NODES)]
+    for row in data:
+        node1 = int(row[0]) - 1
+        node2 = int(row[1]) - 1
+        matrix[node1][node2] = 1
+        matrix[node2][node1] = 1
+    return matrix
+
+
 def main():
-    print("Hello, World!")
     data = read_csv("../datasets/KarateClub.csv")
-    print(data)
+    formatted_data = format_data(data)
+    adjacency_matrix = get_adjacency_matrix(formatted_data)
+
+    print("\nAdjacency matrix:")
+    for idx, row in enumerate(adjacency_matrix):
+        print(f"{idx + 1}: {row}")
 
 
 if __name__ == "__main__":
