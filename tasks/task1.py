@@ -69,6 +69,13 @@ def calculate_avg_degree(adjacency_list):
     return total_degree / len(adjacency_list)
 
 
+def calculate_degree_distribution(adjacency_list, max_degree=NUMBER_OF_NODES):
+    degree_distribution = [0 for _ in range(max_degree + 1)]
+    for idx, row in enumerate(adjacency_list):
+        degree_distribution[len(row)] += 1
+    return degree_distribution
+
+
 def main():
     data = read_csv("../datasets/KarateClub.csv")
     formatted_data = format_data(data)
@@ -91,6 +98,11 @@ def main():
 
     avg_degree = calculate_avg_degree(adjacency_list)
     print(f"Avg degree: {avg_degree:.2f} ({avg_degree})\n")
+
+    degree_distribution = calculate_degree_distribution(adjacency_list, max_degree)
+    print(f"Degree distribution: {degree_distribution}\n")
+    for idx, val in enumerate(degree_distribution):
+        print(f"{idx}: {val} \t {val / NUMBER_OF_NODES:.2f} = {val} / {NUMBER_OF_NODES}")
 
 
 if __name__ == "__main__":
