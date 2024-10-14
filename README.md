@@ -23,6 +23,14 @@ closeness centralitu každého vrcholu
 
 $$C(i) = \frac{n}{\sum_{j=1}^{n} d(i,j)}$$
 
+## Cvíčení 3
+
+Pro Karate Club určete shlukovací koeficient každého vrcholu a určete tranztivitu sítě (tedy průměrný shlukovací
+koeficient). Určete shlukovací efekt. Ten se určí jako průměrný CC pro vrcholy daného stupně. Distribuci tohoto
+průměrného CC (osa Y) vůči stupni (osa X) vykreslete (výsledek). Výsledky měření všech lokálních vlastností uložte do
+CSV souboru. Ten bude obsahovat následujcí sloupce: ID vrcholu, jeho stupeň, closeness centralitu a shlukovací
+koeficient.
+
 ## Datasety
 
 - [Zachary's karate club](https://websites.umich.edu/~mejn/netdata/karate.zip)
