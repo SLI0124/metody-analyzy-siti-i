@@ -60,7 +60,7 @@ def save_attributes_to_csv(G):
     clustering_coefficient = nx.clustering(G)
     closeness_centrality = nx.closeness_centrality(G)
 
-    output_path = "../results/csv_result.csv"
+    output_path = "../results/task3_csv_result.csv"
 
     if not os.path.exists(os.path.dirname(output_path)):
         os.makedirs(os.path.dirname(output_path))
