@@ -31,6 +31,20 @@ průměrného CC (osa Y) vůči stupni (osa X) vykreslete (výsledek). Výsledky
 CSV souboru. Ten bude obsahovat následujcí sloupce: ID vrcholu, jeho stupeň, closeness centralitu a shlukovací
 koeficient.
 
+## Cvičení 4
+
+Detekce komunitní struktury pro Karate Club. Určete komunitní strukturu těmito algoritmy (metodami):
+
+- louvain_communities()
+- label_propagation_communities()
+- kernighan_lin_bisection() (najděte 4 komunity)
+- girvan_newman() (najděte cca 4 komunity)
+- k_clique_communities() (nelze spčítat modularitu)
+- Komunitní strukturu pro každý algoritmus vizualizujte.
+- Vyhodnoťte modularitu pro komunitní strukturu nalezenou všemi algoritmy (modularity()).
+- Dále si k csv souboru z minulého cvičení pro každý algoritmus přidejte sloupce s id komunity, ke které dle příslušného
+  algoritmu uzel patří.
+
 ## Datasety
 
 - [Zachary's karate club](https://websites.umich.edu/~mejn/netdata/karate.zip)
