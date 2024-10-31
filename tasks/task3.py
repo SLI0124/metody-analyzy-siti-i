@@ -66,7 +66,7 @@ def save_attributes_to_csv(G):
         os.makedirs(os.path.dirname(output_path))
 
     with open(output_path, "w") as f:
-        f.write("ID, Degree, Closeness centrality, Clustering coefficient\n")
+        f.write("ID,Degree,Closeness centrality,Clustering coefficient\n")
         for node in sorted(G.nodes(), key=int):  # sort the nodes by their ID in ascending order
             f.write(f"{node}, {G.degree(node)}, {closeness_centrality[node]}, {clustering_coefficient[node]}\n")
 
