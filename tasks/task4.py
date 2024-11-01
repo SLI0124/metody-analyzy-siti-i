@@ -2,7 +2,7 @@ import os
 
 import networkx as nx
 import matplotlib.pyplot as plt
-from matplotlib.patches import Wedge  # Import Wedge directly
+from matplotlib.patches import Wedge
 
 from tasks.task1 import read_csv, format_data
 
@@ -109,6 +109,34 @@ def print_formatted_communities(method_name, communities, modularity=None):
           f"Communities: {communities}\n")
 
 
+def expand_csv_columns(communities_list):
+    with open("../results/task3_csv_result.csv", "r") as read_file:
+        lines = read_file.readlines()
+        header = lines[0].strip().split(",")
+        header.extend(["Louvain", "Label propagation", "Kernighan Lin Bisection", "Girvan Newman", "K-clique"])
+        lines[0] = ",".join(header) + "\n"
+
+        for i, line in enumerate(lines[1:]):
+            line = line.strip().split(",")
+            node = int(line[0])
+            print(f"Processing node: {node}")
+
+            for method_name, communities in communities_list:
+                community_ids = []
+                for j, community in enumerate(communities):
+                    if node in map(int, community):  # Convert community nodes to integers
+                        community_ids.append(str(j))
+                if community_ids:
+                    line.append(f"[{';'.join(community_ids)}]")
+                else:
+                    line.append("")
+
+            lines[i + 1] = ",".join(line) + "\n"
+
+    with open("../results/task4_csv_result.csv", "w") as write_file:
+        write_file.writelines(lines)
+
+
 def main():
     data = read_csv("../datasets/KarateClub.csv")
     formatted_data = format_data(data)
@@ -123,14 +151,18 @@ def main():
         "K-clique": get_k_clique_communities
     }
 
+    communities_list = []
     for method_name, method in methods_dict.items():
         communities = method(G)
+        communities_list.append((method_name, communities))
         if method_name == "K-clique":
             modularity = "N/A"
         else:
             modularity = calculate_modularity(G, communities)
         print_formatted_communities(method_name, communities, modularity)
         visualize_communities(G, communities, method_name)
+
+    expand_csv_columns(communities_list)
 
 
 if __name__ == '__main__':
