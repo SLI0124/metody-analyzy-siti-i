@@ -119,7 +119,6 @@ def expand_csv_columns(communities_list):
         for i, line in enumerate(lines[1:]):
             line = line.strip().split(",")
             node = int(line[0])
-            print(f"Processing node: {node}")
 
             for method_name, communities in communities_list:
                 community_ids = []
