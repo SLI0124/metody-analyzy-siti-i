@@ -126,7 +126,7 @@ def expand_csv_columns(communities_list):
                     if node in map(int, community):  # Convert community nodes to integers
                         community_ids.append(str(j))
                 if community_ids:
-                    line.append(f"[{';'.join(community_ids)}]")
+                    line.append(f"{';'.join(community_ids)}")
                 else:
                     line.append("")
 
