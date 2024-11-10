@@ -45,6 +45,17 @@ Detekce komunitní struktury pro Karate Club. Určete komunitní strukturu těmi
 - Dále si k csv souboru z minulého cvičení pro každý algoritmus přidejte sloupce s id komunity, ke které dle příslušného
   algoritmu uzel patří.
 
+## Cvičení 5
+
+- Naimplementujte metodu kNN, e-radius a kombinaci obou metod, kde pro podobnost použijte Gaussian kernel.
+- Experimentujte s nastavením parametrů k a e, tak abyste vypozorovali vliv těchto parametrů na vlastnosti výsledných
+  sítí. Povinně použijte parametry k=3 a Sigma=1, epsilon=0.9.
+- Použijte Gephi pro výpočet základních vlastností a vizualizaci sítí.
+- Vytvořte report, kde pro každou metodu a každou testovanou hodnotu parametru / parametrů budete mít
+  vizualizaci sítě vzhledem k modularitě a informace o počtu komunit, průměrném stupni a počtu komponent souvislosti.
+  Obarvěte vrcholy také vzhledem ke třídě jednotlivých datových instancí (záznamů) v původním datasetu, tj. vzhledem k
+  typu kosatce (iris setosa, iris versicolor respektive iris virginica).
+
 ## Datasety
 
 - [Zachary's karate club](https://websites.umich.edu/~mejn/netdata/karate.zip)
