@@ -12,15 +12,15 @@ def load_csv(file_path, delimiter=','):
 
 
 def gaussian_similarity(x, y, sigma=1.0):
-    distance = np.linalg.norm(x - y)
-    return np.exp(- (distance ** 2) / (2 * sigma ** 2))
+    distance = np.linalg.norm(x - y)  # Euclidean distance
+    return np.exp(- (distance ** 2) / (2 * sigma ** 2))  # Gaussian similarity
 
 
 def build_knn_graph(data, k=3, sigma=1.0):
     G = nx.Graph()
     for i, point in enumerate(data):
         distances = [(j, gaussian_similarity(point, other, sigma))
-                     for j, other in enumerate(data) if i != j]
+                     for j, other in enumerate(data) if i != j]  # Calculate similarity with all other points
         distances.sort(key=lambda x: -x[1])  # Sort by similarity in descending order
         for j, sim in distances[:k]:  # Select top k neighbors
             G.add_edge(i, j, weight=sim)
@@ -29,12 +29,12 @@ def build_knn_graph(data, k=3, sigma=1.0):
 
 def build_e_radius_graph(data, epsilon=0.9, sigma=1.0):
     G = nx.Graph()
-    for i, point in enumerate(data):
-        for j, other in enumerate(data):
-            if i != j:
-                sim = gaussian_similarity(point, other, sigma)
-                if sim > epsilon:
-                    G.add_edge(i, j, weight=sim)
+    for i, point in enumerate(data):  # For each point
+        for j, other in enumerate(data):  # For each other point
+            if i != j:  # If the points are different
+                sim = gaussian_similarity(point, other, sigma)  # Calculate similarity
+                if sim > epsilon:  # If similarity is greater than epsilon
+                    G.add_edge(i, j, weight=sim)  # Add edge to graph
     return G
 
 
@@ -61,7 +61,7 @@ def save_graph_to_csv(G, file_name):
     # add to prefix path "../results/task5_" to save the file in the correct directory
     with open(f"../results/task5_{file_name}", 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Source", "Target", "Weight"])
+        writer.writerow(["Source", "Target", "Sim"])
         for u, v, data in G.edges(data=True):
             writer.writerow([u, v, data['weight']])
 
