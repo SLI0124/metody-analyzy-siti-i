@@ -6,56 +6,51 @@ vlastnosti sítí, bude schopen aplikovat metody související s analýzou těch
 implementovat vybrané metody a modely. Dále bude schopen využít nástroje a knihovny pro analýzu a vizualizaci sítí
 a po aplikaci metod analýzy sítí bude umět posoudit relevanci výsledků a nalézt jejich srozumitelnou interpretaci.
 
-# Cvičení
+## Spuštění a instalace prostředí
 
-## Cvičení 1
+### Instalace prostředí
 
-První analýza síťových dat - implementujte vše sami, stačí konzolová aplikace. Data z kolekce Karate
-Club reprezentujte maticí sousednosti (adjacency matrix) a seznamem vrcholů a jejich sousedů (adjacency list). Určete
-min, max a průměrný stupeň vrcholů. Určete četnost a relativní četnost výskytů vrcholů s daným stupněm a vytvořte
-histogram těchto četností (sloupcový graf, kde na ose x je stupeň a na ose y počet vrcholů s daným stupněm).
+#### Linux & MacOS
 
-## Cvičení 2
+```bash
+python3 -m venv venv
+```
 
-Zadání cvičení - implementujte vše sami, stačí konzolová aplikace. Pro Karate Club určete vzdálenost (délku nejkratší
-cesty) mezi všemi dvojicemi vrcholů, průměrnou vzdálenost a průměr. Budete potřebovat Floydův algoritmus. Dále určete
-closeness centralitu každého vrcholu
+#### Windows
 
-$$C(i) = \frac{n}{\sum_{j=1}^{n} d(i,j)}$$
+```bash 
+python -m venv venv
+```
 
-## Cvíčení 3
+### Spuštění prostředí
 
-Pro Karate Club určete shlukovací koeficient každého vrcholu a určete tranztivitu sítě (tedy průměrný shlukovací
-koeficient). Určete shlukovací efekt. Ten se určí jako průměrný CC pro vrcholy daného stupně. Distribuci tohoto
-průměrného CC (osa Y) vůči stupni (osa X) vykreslete (výsledek). Výsledky měření všech lokálních vlastností uložte do
-CSV souboru. Ten bude obsahovat následujcí sloupce: ID vrcholu, jeho stupeň, closeness centralitu a shlukovací
-koeficient.
+#### Linux & MacOS
 
-## Cvičení 4
+```bash
+source venv/bin/activate
+```
 
-Detekce komunitní struktury pro Karate Club. Určete komunitní strukturu těmito algoritmy (metodami):
+#### Windows
 
-- louvain_communities()
-- label_propagation_communities()
-- kernighan_lin_bisection() (najděte 4 komunity)
-- girvan_newman() (najděte cca 4 komunity)
-- k_clique_communities() (nelze spčítat modularitu)
-- Komunitní strukturu pro každý algoritmus vizualizujte.
-- Vyhodnoťte modularitu pro komunitní strukturu nalezenou všemi algoritmy (modularity()).
-- Dále si k csv souboru z minulého cvičení pro každý algoritmus přidejte sloupce s id komunity, ke které dle příslušného
-  algoritmu uzel patří.
+```bash
+venv\Scripts\activate
+```
 
-## Cvičení 5
+### Instalace závislostí
 
-- Naimplementujte metodu kNN, e-radius a kombinaci obou metod, kde pro podobnost použijte Gaussian kernel.
-- Experimentujte s nastavením parametrů k a e, tak abyste vypozorovali vliv těchto parametrů na vlastnosti výsledných
-  sítí. Povinně použijte parametry k=3 a Sigma=1, epsilon=0.9.
-- Použijte Gephi pro výpočet základních vlastností a vizualizaci sítí.
-- Vytvořte report, kde pro každou metodu a každou testovanou hodnotu parametru / parametrů budete mít
-  vizualizaci sítě vzhledem k modularitě a informace o počtu komunit, průměrném stupni a počtu komponent souvislosti.
-  Obarvěte vrcholy také vzhledem ke třídě jednotlivých datových instancí (záznamů) v původním datasetu, tj. vzhledem k
-  typu kosatce (iris setosa, iris versicolor respektive iris virginica).
+```bash
+pip install -r requirements.txt
+```
+
+## Projekt
+
+Vše k projektu se nachází v [složce](project) a zadání projektu naleznete v [zde](project/README.md).
+
+## Cvičení
+
+Vše k cvičení naleznete v [složce](tasks) a zadání veškerých cvičení naleznete v [zde](tasks/README.md).
 
 ## Datasety
 
-- [Zachary's karate club](https://websites.umich.edu/~mejn/netdata/karate.zip)
+- [Zachary's karate club](https://en.wikipedia.org/wiki/Zachary%27s_karate_club)
+- [Iris dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set)
