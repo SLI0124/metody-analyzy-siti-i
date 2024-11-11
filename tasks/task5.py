@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -59,7 +61,11 @@ def build_combined_graph(data, k=3, epsilon=0.9, sigma=1.0):
 
 def save_graph_to_csv(G, file_name):
     # add to prefix path "../results/task5_" to save the file in the correct directory
-    with open(f"../results/task5_{file_name}", 'w', newline='') as file:
+    write_path = "../results/task5/" + file_name
+    if not os.path.exists(os.path.dirname(write_path)):
+        os.makedirs(os.path.dirname(write_path))
+
+    with open(write_path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["Source", "Target", "Sim"])
         for u, v, data in G.edges(data=True):
