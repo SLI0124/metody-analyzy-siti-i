@@ -97,9 +97,9 @@ def visualize_communities(G, communities, method_name):
     nx.draw_networkx_labels(G, pos, font_size=12, font_color='black')
     plt.axis('equal')  # makes sure the pie chart is drawn as a circle
 
-    save_dir = f"../results/"
+    save_dir = f"../results/task4/"
     os.makedirs(save_dir, exist_ok=True)
-    plt.savefig(f"{save_dir}/task4_{method_name.replace(' ', "_")}_communities.png")
+    plt.savefig(f"{save_dir}/{method_name.replace(' ', "_")}_communities.png")
 
 
 def print_formatted_communities(method_name, communities, modularity=None):
@@ -110,7 +110,7 @@ def print_formatted_communities(method_name, communities, modularity=None):
 
 
 def expand_csv_columns(communities_list):
-    with open("../results/task3_csv_result.csv", "r") as read_file:
+    with open("../results/task3/csv_result.csv", "r") as read_file:
         lines = read_file.readlines()
         header = lines[0].strip().split(",")
         header.extend(["Louvain", "Label propagation", "Kernighan Lin Bisection", "Girvan Newman", "K-clique"])
@@ -132,7 +132,11 @@ def expand_csv_columns(communities_list):
 
             lines[i + 1] = ",".join(line) + "\n"
 
-    with open("../results/task4_csv_result.csv", "w") as write_file:
+    save_path = "../results/task4/csv_result.csv"
+    if not os.path.exists(os.path.dirname(save_path)):
+        os.makedirs(os.path.dirname(save_path))
+
+    with open(save_path, "w") as write_file:
         write_file.writelines(lines)
 
 
