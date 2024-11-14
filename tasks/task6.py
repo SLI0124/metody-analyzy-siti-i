@@ -99,7 +99,7 @@ def count_weakly_connected_components(edges, n):
     return component_count, largest_component, sum(component_sizes) / len(component_sizes)
 
 
-def calculate_clustering_coefficient(edges):
+def calculate_average_clustering_coefficient(edges):
     G = nx.Graph()
     G.add_edges_from(edges)
 
@@ -121,7 +121,7 @@ def calculate_graph_properties(edges, n, probability):
     number_of_edges = len(edges)
     average_degree = sum(dict(G.degree()).values()) / number_of_nodes
     average_path_distance = calculate_path_distance(edges)
-    clustering_coefficient = calculate_clustering_coefficient(edges)
+    clustering_coefficient = calculate_average_clustering_coefficient(edges)
     longest_path, shortest_path = calculate_diameter_and_radius(edges)
 
     num_connected_components, largest_component_size, average_component_size = (
@@ -152,7 +152,7 @@ def main():
 
     headers = [
         "Number of nodes", "Probability", "Number of edges", "Average degree",
-        "Average distance", "Clustering coefficient", "The longest path",
+        "Average distance", "Average clustering coefficient", "The longest path",
         "The shortest path", "Number of connected components", "Largest component size",
         "Average component size"
     ]
