@@ -29,26 +29,28 @@ def has_graph_loops(edges):
     return any([source == target for source, target in edges])
 
 
-def save_to_csv(edges, n, filename_prefix):
+def save_nodes_to_csv(nodes, filename_prefix):
     file_prefix = "../results/task6/"
 
     if not os.path.exists(os.path.dirname(file_prefix)):
         os.makedirs(os.path.dirname(file_prefix))
 
-    all_nodes = set(range(n))  # ensure all nodes are included in the CSV, even if they are isolated
+    with open(file_prefix + filename_prefix + "_nodes.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["id"])
+        writer.writerows([[node] for node in nodes])
 
-    # Save edges to CSV
+
+def save_edges_to_csv(edges, filename_prefix):
+    file_prefix = "../results/task6/"
+
+    if not os.path.exists(os.path.dirname(file_prefix)):
+        os.makedirs(os.path.dirname(file_prefix))
+
     with open(file_prefix + filename_prefix + "_edges.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["source", "target"])
         writer.writerows(edges)
-
-    # Save nodes to CSV
-    with open(file_prefix + filename_prefix + "_nodes.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["id"])
-        for node in all_nodes:
-            writer.writerow([node])
 
 
 def calculate_path_distance(edges):
@@ -155,6 +157,9 @@ def main():
         "Average component size"
     ]
 
+    # save the nodes to a CSV file once, we don't need to do it for each graph
+    save_nodes_to_csv(list(range(n)), f"graph_n_{n}")
+
     for p in p_values:
         edges = generate_graph(n, p)
         plot_name = f"Graph with n={n} and p={p}"
@@ -166,7 +171,7 @@ def main():
             continue
         else:
             print("Graph does not have multi-edges or loops, saving to CSV")
-            save_to_csv(edges, n, f"graph_n_{n}_p_{p}")
+            save_edges_to_csv(edges, f"graph_n_{n}_p_{p}")
         print()
 
         data.append(calculate_graph_properties(edges, n, p))
