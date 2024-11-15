@@ -2,6 +2,7 @@ import random
 import csv
 import os
 import networkx as nx
+import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 X_RANGE = (0, 1_000)
@@ -99,6 +100,16 @@ def count_weakly_connected_components(edges, n):
     return component_count, largest_component, sum(component_sizes) / len(component_sizes)
 
 
+def plot_degree_distribution(edges, probability):
+    degrees_distribution = nx.degree_histogram(nx.Graph(edges))
+    plt.bar(range(len(degrees_distribution)), degrees_distribution, width=1, edgecolor='black', color='C0')
+    plt.xlabel("Degree")
+    plt.ylabel("Number of nodes")
+    plt.title(f"Degree distribution for p={probability}")
+    plt.savefig(f"../results/task6/Degree_distribution_p_{probability}.png")
+    plt.clf()
+
+
 def calculate_average_clustering_coefficient(edges):
     G = nx.Graph()
     G.add_edges_from(edges)
@@ -175,6 +186,7 @@ def main():
         print()
 
         data.append(calculate_graph_properties(edges, n, p))
+        plot_degree_distribution(edges, p)
 
     print(tabulate(data, headers=headers, tablefmt="grid"))
     save_properties_to_csv(data, "graph_properties", headers)
