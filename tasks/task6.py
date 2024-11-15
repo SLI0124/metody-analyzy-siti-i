@@ -110,6 +110,19 @@ def plot_degree_distribution(edges, probability):
     plt.clf()
 
 
+def plot_components_distribution(edges, probability):
+    G = nx.Graph()
+    G.add_edges_from(edges)
+    components = nx.connected_components(G)
+    components_sizes = [len(component) for component in components]
+    plt.hist(components_sizes, bins=10, edgecolor='black', color='C0')
+    plt.xlabel("Component size")
+    plt.ylabel("Number of components")
+    plt.title(f"Components distribution for p={probability}")
+    plt.savefig(f"../results/task6/Components_distribution_p_{probability}.png")
+    plt.clf()
+
+
 def calculate_average_clustering_coefficient(edges):
     G = nx.Graph()
     G.add_edges_from(edges)
@@ -186,6 +199,7 @@ def main():
 
         data.append(calculate_graph_properties(edges, n, p))
         plot_degree_distribution(edges, p)
+        plot_components_distribution(edges, p)
 
     print(tabulate(data, headers=headers, tablefmt="grid"))
     save_properties_to_csv(data, "graph_properties", headers)
