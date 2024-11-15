@@ -53,6 +53,23 @@ def save_edges_to_csv(edges, filename_prefix):
         writer.writerow(["source", "target"])
         writer.writerows(edges)
 
+    # save nodes with their degrees, closeness centrality, and clustering coefficient
+    G = nx.Graph()
+    G.add_edges_from(edges)
+
+    clustering_coefficient = nx.clustering(G)
+    closeness_centrality = nx.closeness_centrality(G)
+    degrees = dict(G.degree())
+
+    # sort them by id
+    nodes = sorted(G.nodes())
+
+    with open(file_prefix + filename_prefix + "_attributes.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["ID", "Degree", "Closeness centrality", "Clustering coefficient"])
+        for node in nodes:
+            writer.writerow([node, degrees[node], closeness_centrality[node], clustering_coefficient[node]])
+
 
 def calculate_path_distance(edges):
     G = nx.Graph()
