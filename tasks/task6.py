@@ -173,8 +173,7 @@ def main():
 
     for p in p_values:
         edges = generate_graph(n, p)
-        plot_name = f"Graph with n={n} and p={p}"
-        print(plot_name)
+        print(f"Graph with n={n} and p={p}")
         print(f"Number of edges: {len(edges)}")
 
         if has_graph_multi_edges(edges) or has_graph_loops(edges):
