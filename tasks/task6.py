@@ -244,18 +244,18 @@ def calculate_graph_properties(edges: list, n: int, probability: float) -> list:
     ]
 
 
-def save_properties_to_csv(data: list, filename: str, headers: list) -> None:
+def save_properties_to_csv(data: list, filename: str, headers: list, directory_prefix: str) -> None:
     """
     Save the properties of the graph to a CSV file.
     :param data: list of graph properties
     :param filename: filename
     :param headers: list of headers
+    :param directory_prefix: prefix for the directory
     :return: None
     """
-    file_prefix = "../results/task6/"
-    os.makedirs(file_prefix, exist_ok=True)
+    os.makedirs(os.path.dirname(directory_prefix), exist_ok=True)
 
-    with open(file_prefix + filename + ".csv", "w", newline="") as f:
+    with open(directory_prefix + filename + ".csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(data)
@@ -272,9 +272,10 @@ def main():
         "The shortest path", "Number of connected components", "Largest component size",
         "Average component size"
     ]
+    directory_prefix = "../results/task6/"
 
     # save the nodes to a CSV file once, we don't need to do it for each graph
-    save_nodes_to_csv(list(range(n)), f"graph_n_{n}", "../results/task6/")
+    save_nodes_to_csv(list(range(n)), f"graph_n_{n}", directory_prefix)
 
     for p in p_values:
         edges = generate_graph(n, p)
@@ -286,15 +287,15 @@ def main():
             continue
         else:
             print("Graph does not have multi-edges or loops, saving to CSV")
-            save_edges_to_csv(edges, f"graph_n_{n}_p_{p}", "../results/task6/")
+            save_edges_to_csv(edges, f"graph_n_{n}_p_{p}", directory_prefix)
         print()
 
         data.append(calculate_graph_properties(edges, n, p))
-        plot_degree_distribution(edges, p, "../results/task6/")
-        plot_components_distribution(edges, p, "../results/task6/")
+        plot_degree_distribution(edges, p, directory_prefix)
+        plot_components_distribution(edges, p, directory_prefix)
 
     print(tabulate(data, headers=headers, tablefmt="grid"))
-    save_properties_to_csv(data, "graph_properties", headers)
+    save_properties_to_csv(data, "graph_properties", headers, directory_prefix)
 
 
 if __name__ == '__main__':
