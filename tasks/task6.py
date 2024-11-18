@@ -77,7 +77,7 @@ def save_edges_to_csv(edges: list, filename_prefix: str, directory_prefix: str) 
     # sort them by id
     nodes = sorted(G.nodes())
 
-    with open(directory_prefix + filename_prefix + "_attributes.csv", "w", newline="") as f:
+    with open(directory_prefix + filename_prefix + "_node_attributes.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["ID", "Degree", "Closeness centrality", "Clustering coefficient"])
         for node in nodes:
