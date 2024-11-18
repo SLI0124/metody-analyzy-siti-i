@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 
-def generate_graph(n, p):
+def generate_graph(n: int, p: float) -> list:
+    """Generate a random graph with n nodes and probability p
+    :param n: number of nodes
+    :param p: probability of edge creation
+    :return: list of edges
+    """
     edges = set()
     for i in range(n):
         for j in range(i + 1, n):
@@ -27,7 +32,14 @@ def has_graph_loops(edges):
     return any([source == target for source, target in edges])
 
 
-def save_nodes_to_csv(nodes, filename_prefix, directory_prefix):
+def save_nodes_to_csv(nodes: list, filename_prefix: str, directory_prefix: str) -> None:
+    """
+    Save the nodes to a CSV file with their IDs.
+    :param nodes: list of nodes
+    :param filename_prefix: prefix for the filename
+    :param directory_prefix: prefix for the directory
+    :return: None
+    """
     if not os.path.exists(os.path.dirname(directory_prefix)):
         os.makedirs(os.path.dirname(directory_prefix))
 
@@ -37,7 +49,15 @@ def save_nodes_to_csv(nodes, filename_prefix, directory_prefix):
         writer.writerows([[node] for node in nodes])
 
 
-def save_edges_to_csv(edges, filename_prefix, directory_prefix):
+def save_edges_to_csv(edges: list, filename_prefix: str, directory_prefix: str) -> None:
+    """
+    Save the edges to a CSV file, also save the nodes with their degrees, closeness centrality,
+    and clustering coefficient. Function create networkx graph from edges and calculate the attributes.
+    :param edges: list of edges
+    :param filename_prefix: prefix for the filename
+    :param directory_prefix: prefix for the directory
+    :return: None
+    """
     if not os.path.exists(os.path.dirname(directory_prefix)):
         os.makedirs(os.path.dirname(directory_prefix))
 
@@ -64,7 +84,13 @@ def save_edges_to_csv(edges, filename_prefix, directory_prefix):
             writer.writerow([node, degrees[node], closeness_centrality[node], clustering_coefficient[node]])
 
 
-def calculate_path_distance(edges):
+def calculate_path_distance(edges: list) -> float:
+    """
+    Calculate the average shortest path length of the graph. Function creates a networkx graph from edges.
+    If the graph is connected, it calculates the average shortest path length. Otherwise, it calculates the average
+    :param edges: list of edges
+    :return: average shortest path length
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
     if nx.is_connected(G):
@@ -79,7 +105,12 @@ def calculate_path_distance(edges):
         return total_distance / num_pairs if num_pairs > 0 else float('inf')
 
 
-def calculate_diameter_and_radius(edges):
+def calculate_diameter_and_radius(edges: list) -> tuple:
+    """
+    Calculate the diameter and radius of the graph. Function creates a networkx graph from edges.
+    :param edges: list of edges
+    :return: tuple of diameter and radius
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
     diameter = 0  # also known as the longest path
@@ -91,7 +122,15 @@ def calculate_diameter_and_radius(edges):
     return diameter, radius
 
 
-def count_weakly_connected_components(edges, n):
+def count_weakly_connected_components(edges: list, n: int) -> tuple:
+    """
+    Count the number of connected components, the size of the largest connected component, and the average size of the
+    connected components. Function creates a networkx graph from edges.
+    :param edges: list of edges
+    :param n: number of nodes
+    :return: tuple of number of connected components, size of the largest connected component, and average size of the
+    connected components
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
 
@@ -110,16 +149,26 @@ def count_weakly_connected_components(edges, n):
     return component_count, largest_component, sum(component_sizes) / len(component_sizes)
 
 
-def save_plot(fig, directory_prefix, filename):
-    """Save the plot to the specified directory."""
+def save_plot(fig: plt.Figure, directory_prefix: str, filename: str) -> None:
+    """Save the plot to the specified directory.
+    :param fig: matplotlib figure
+    :param directory_prefix: prefix for the directory
+    :param filename: filename
+    :return: None
+    """
     save_path = os.path.join(directory_prefix, filename)
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     fig.savefig(save_path)
     plt.clf()
 
 
-def plot_degree_distribution(edges, probability, directory_prefix):
-    """Plot the degree distribution."""
+def plot_degree_distribution(edges: list, probability: float, directory_prefix: str) -> None:
+    """Plot the degree distribution.
+    :param edges: list of edges
+    :param probability: probability of edge creation
+    :param directory_prefix: prefix for the directory
+    :return: None
+    """
     degrees_distribution = nx.degree_histogram(nx.Graph(edges))
     plt.bar(range(len(degrees_distribution)), degrees_distribution, width=1, edgecolor='black', color='C0')
     plt.xlabel("Degree")
@@ -129,7 +178,12 @@ def plot_degree_distribution(edges, probability, directory_prefix):
 
 
 def plot_components_distribution(edges, probability, directory_prefix):
-    """Plot the components' distribution."""
+    """Plot the components' distribution. Function creates a networkx graph from edges.
+    :param edges: list of edges
+    :param probability: probability of edge creation
+    :param directory_prefix: prefix for the directory
+    :return: None
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
     components = nx.connected_components(G)
@@ -141,7 +195,12 @@ def plot_components_distribution(edges, probability, directory_prefix):
     save_plot(plt.gcf(), directory_prefix, f"Components_distribution_p_{probability}.png")
 
 
-def calculate_average_clustering_coefficient(edges):
+def calculate_average_clustering_coefficient(edges: list) -> float:
+    """
+    Calculate the average clustering coefficient of the graph. Function creates a networkx graph from edges.
+    :param edges: list of edges
+    :return: average clustering coefficient
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
 
@@ -155,7 +214,15 @@ def calculate_average_clustering_coefficient(edges):
     return average_clustering_coefficient
 
 
-def calculate_graph_properties(edges, n, probability):
+def calculate_graph_properties(edges: list, n: int, probability: float) -> list:
+    """
+    Calculate the properties of the graph. Function creates a networkx graph from edges.
+    :param edges: list of edges
+    :param n: number of nodes
+    :param probability: probability of edge creation
+    :return: list of graph properties: number of nodes, probability, number of edges, average degree, average distance,
+    average clustering coefficient, the longest path, the shortest path, number of connected components, size of the
+    """
     G = nx.Graph()
     G.add_edges_from(edges)
 
@@ -177,7 +244,14 @@ def calculate_graph_properties(edges, n, probability):
     ]
 
 
-def save_properties_to_csv(data, filename, headers):
+def save_properties_to_csv(data: list, filename: str, headers: list) -> None:
+    """
+    Save the properties of the graph to a CSV file.
+    :param data: list of graph properties
+    :param filename: filename
+    :param headers: list of headers
+    :return: None
+    """
     file_prefix = "../results/task6/"
     os.makedirs(file_prefix, exist_ok=True)
 
