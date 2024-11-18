@@ -24,3 +24,9 @@ Soubor obsahuje tři sítě:
 Přepínání mezi sítěmi je možné pomocí záložek na horní liště uprostřed. Obarvení uzlů je podle tříd a komunit je možné
 přepínat v sekci `Appearance` v horním panelu. Zde vyberte ikonu palety, sekci `Nodes` a v `Partition` vyberte
 `Modularity Class` nebo `species`. Potom stačí kliknout na tlačítko `Apply`.
+
+### Cvičení 6
+
+Cvičení 6 je zamšřeno na náhodné sítě. Každá síť má počet uzlů a pravděpodobnost vytvoření hrany. Soubor obsahuje
+tři sítě s hodnotami pražděpodobnosti 0.001, 0.0059 a 0.01. Je zde nepřeberné množství obravení a velikosti uzlů,
+které je možné upravit v sekci `Appearance` v horním panelu.
