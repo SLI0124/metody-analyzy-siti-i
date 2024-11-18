@@ -5,9 +5,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 
-X_RANGE = (0, 1_000)
-Y_RANGE = (0, 1_000)
-
 
 def generate_graph(n, p):
     edges = set()
