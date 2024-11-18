@@ -30,25 +30,21 @@ def has_graph_loops(edges):
     return any([source == target for source, target in edges])
 
 
-def save_nodes_to_csv(nodes, filename_prefix):
-    file_prefix = "../results/task6/"
+def save_nodes_to_csv(nodes, filename_prefix, directory_prefix):
+    if not os.path.exists(os.path.dirname(directory_prefix)):
+        os.makedirs(os.path.dirname(directory_prefix))
 
-    if not os.path.exists(os.path.dirname(file_prefix)):
-        os.makedirs(os.path.dirname(file_prefix))
-
-    with open(file_prefix + filename_prefix + "_nodes.csv", "w", newline="") as f:
+    with open(directory_prefix + filename_prefix + "_nodes.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["id"])
         writer.writerows([[node] for node in nodes])
 
 
-def save_edges_to_csv(edges, filename_prefix):
-    file_prefix = "../results/task6/"
+def save_edges_to_csv(edges, filename_prefix, directory_prefix):
+    if not os.path.exists(os.path.dirname(directory_prefix)):
+        os.makedirs(os.path.dirname(directory_prefix))
 
-    if not os.path.exists(os.path.dirname(file_prefix)):
-        os.makedirs(os.path.dirname(file_prefix))
-
-    with open(file_prefix + filename_prefix + "_edges.csv", "w", newline="") as f:
+    with open(directory_prefix + filename_prefix + "_edges.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["source", "target"])
         writer.writerows(edges)
@@ -64,7 +60,7 @@ def save_edges_to_csv(edges, filename_prefix):
     # sort them by id
     nodes = sorted(G.nodes())
 
-    with open(file_prefix + filename_prefix + "_attributes.csv", "w", newline="") as f:
+    with open(directory_prefix + filename_prefix + "_attributes.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["ID", "Degree", "Closeness centrality", "Clustering coefficient"])
         for node in nodes:
@@ -117,17 +113,26 @@ def count_weakly_connected_components(edges, n):
     return component_count, largest_component, sum(component_sizes) / len(component_sizes)
 
 
-def plot_degree_distribution(edges, probability):
+def save_plot(fig, directory_prefix, filename):
+    """Save the plot to the specified directory."""
+    save_path = os.path.join(directory_prefix, filename)
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    fig.savefig(save_path)
+    plt.clf()
+
+
+def plot_degree_distribution(edges, probability, directory_prefix):
+    """Plot the degree distribution."""
     degrees_distribution = nx.degree_histogram(nx.Graph(edges))
     plt.bar(range(len(degrees_distribution)), degrees_distribution, width=1, edgecolor='black', color='C0')
     plt.xlabel("Degree")
     plt.ylabel("Number of nodes")
     plt.title(f"Degree distribution for p={probability}")
-    plt.savefig(f"../results/task6/Degree_distribution_p_{probability}.png")
-    plt.clf()
+    save_plot(plt.gcf(), directory_prefix, f"Degree_distribution_p_{probability}.png")
 
 
-def plot_components_distribution(edges, probability):
+def plot_components_distribution(edges, probability, directory_prefix):
+    """Plot the components' distribution."""
     G = nx.Graph()
     G.add_edges_from(edges)
     components = nx.connected_components(G)
@@ -136,8 +141,7 @@ def plot_components_distribution(edges, probability):
     plt.xlabel("Component size")
     plt.ylabel("Number of components")
     plt.title(f"Components distribution for p={probability}")
-    plt.savefig(f"../results/task6/Components_distribution_p_{probability}.png")
-    plt.clf()
+    save_plot(plt.gcf(), directory_prefix, f"Components_distribution_p_{probability}.png")
 
 
 def calculate_average_clustering_coefficient(edges):
@@ -199,7 +203,7 @@ def main():
     ]
 
     # save the nodes to a CSV file once, we don't need to do it for each graph
-    save_nodes_to_csv(list(range(n)), f"graph_n_{n}")
+    save_nodes_to_csv(list(range(n)), f"graph_n_{n}", "../results/task6/")
 
     for p in p_values:
         edges = generate_graph(n, p)
@@ -211,12 +215,12 @@ def main():
             continue
         else:
             print("Graph does not have multi-edges or loops, saving to CSV")
-            save_edges_to_csv(edges, f"graph_n_{n}_p_{p}")
+            save_edges_to_csv(edges, f"graph_n_{n}_p_{p}", "../results/task6/")
         print()
 
         data.append(calculate_graph_properties(edges, n, p))
-        plot_degree_distribution(edges, p)
-        plot_components_distribution(edges, p)
+        plot_degree_distribution(edges, p, "../results/task6/")
+        plot_components_distribution(edges, p, "../results/task6/")
 
     print(tabulate(data, headers=headers, tablefmt="grid"))
     save_properties_to_csv(data, "graph_properties", headers)
