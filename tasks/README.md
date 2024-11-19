@@ -71,3 +71,15 @@ Detekce komunitní struktury pro Karate Club. Určete komunitní strukturu těmi
       souvislosti), shlukovací koeficient a distribuce stupňů, komunitní struktura, centrality).
     - Sítě vizualizujte a pro globální vlastnosti vytvořte vhodnou tabulku s jejich hodnotami.
     - Jaké rozdíly mezi sítěmi pozorujete vzhledem k pravděpodobnosti p a sledovaným vlastnostem?
+
+## Cvičení 7
+
+Naimplementujte (tj. sami, nesmíte použít žádnou knihovní funkci) model preferenčního připojování (BA model).
+
+- Vygenerujte dvě sítě, jednu pro m = 2, druhou pro m = 3. Cílový stav jsou sítě s 550 vrcholy.
+- Sítě vyexportujte do formátu vhodného pro Gephi.
+- Určete všechny vlastnosti vygenerovaných sítí (grafů), které v tuto chvíli určit umíte (počet komponent souvislosti,
+  distribuce velikosti komponent souvislosti, velikost největší komponenty souvislosti, průměr, průměrná vzdálenost (
+  průměrná vzdálenost přes jednotlivé komponenty souvislosti), shlukovací koeficient a distribuce stupňů, komunitní
+  struktura, centrality).
+- Sítě vizualizujte.
