@@ -27,6 +27,6 @@ přepínat v sekci `Appearance` v horním panelu. Zde vyberte ikonu palety, sekc
 
 ### Cvičení 6
 
-Cvičení 6 je zamšřeno na náhodné sítě. Každá síť má počet uzlů a pravděpodobnost vytvoření hrany. Soubor obsahuje
+Cvičení 6 je zaměřeno na náhodné sítě. Každá síť má počet uzlů a pravděpodobnost vytvoření hrany. Soubor obsahuje
 tři sítě s hodnotami pražděpodobnosti 0.001, 0.0059 a 0.01. Je zde nepřeberné množství obravení a velikosti uzlů,
 které je možné upravit v sekci `Appearance` v horním panelu.
