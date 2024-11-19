@@ -30,3 +30,9 @@ přepínat v sekci `Appearance` v horním panelu. Zde vyberte ikonu palety, sekc
 Cvičení 6 je zaměřeno na náhodné sítě. Každá síť má počet uzlů a pravděpodobnost vytvoření hrany. Soubor obsahuje
 tři sítě s hodnotami pražděpodobnosti 0.001, 0.0059 a 0.01. Je zde nepřeberné množství obravení a velikosti uzlů,
 které je možné upravit v sekci `Appearance` v horním panelu.
+
+### Cvičení 7
+
+Sedmé cvičění je zaměřeno na tvorbu sítí pomocí Barabásiho-Albertova modelu. Cílem bylo vygenerovat `550` uzlů a
+s hodnotami parametrů `m=2` a `m=3`. Parametr `m` určuje počet hran, které se přidají k nově přidanému uzlu. První sít
+má větší uzly oprtoti všem ostatním uzlům a méně hran mezi uzly. Situace u druhé sítě je opačná.
