@@ -1,0 +1,3 @@
+Initial number of nodes,Initial number of edges,Number of nodes,Number of edges,Average degree,Average distance,Average clustering coefficient,Longest path,Shortest path,Number of connected components,Largest component size,Average component size
+6,10,550,1098,3.9927272727272727,3.7425269084285477,0.0358348928597268,7,4,1,550,550.0
+9,13,550,1636,5.949090909090909,3.26702434177844,0.034229454104264444,6,3,1,550,550.0
