@@ -69,7 +69,8 @@ def create_barabasi_albert_graph(G: nx.Graph, m: int, n: int) -> nx.Graph:
             rand_val = random.random()
             for node, cum_prob in cumulative_probs:
                 if rand_val <= cum_prob:
-                    if node != new_node:  # Avoid self-loops
+                    # prevent loops and multi-edges
+                    if node != new_node and node not in G.neighbors(new_node):
                         targets.add(node)
                     break
 
