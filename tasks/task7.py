@@ -9,15 +9,31 @@ STARTING_NODES_COUNT_RANGE = (5, 10)
 
 
 def has_graph_loops(G: nx.Graph) -> bool:
-    return any(u == v for u, v in G.edges)
+    """Checks if there are any loops in the graph."""
+    seen_edges = set()
+    for u, v in G.edges:
+        if u == v:
+            return True
+        edge = tuple(sorted((u, v)))  # Ensure the order is consistent
+        if edge in seen_edges:
+            return True
+        seen_edges.add(edge)
+    return False
 
 
 def has_graph_multi_edges(G: nx.Graph) -> bool:
-    return any(G.has_edge(u, v) for u, v in G.edges if G.has_edge(v, u))
+    """Checks if there are any multi-edges in the graph."""
+    seen_edges = set()
+    for u, v in G.edges:
+        edge = tuple(sorted((u, v)))  # Ensure the order is consistent
+        if edge in seen_edges:
+            return True
+        seen_edges.add(edge)
+    return False
 
 
 def generate_connected_graph(size: int) -> nx.Graph:
-    """ Initialize connected graph with a given size, not necessarily fully connected """
+    """Initialize a connected graph with a given size, avoiding loops and multi-edges."""
     if size < 2:
         raise ValueError("The size of the graph must be at least 2 to have some more fun graph")
 
@@ -69,7 +85,8 @@ def create_barabasi_albert_graph(G: nx.Graph, m: int, n: int) -> nx.Graph:
             rand_val = random.random()
             for node, cum_prob in cumulative_probs:
                 if rand_val <= cum_prob:
-                    if node != new_node:  # Avoid self-loops
+                    # if node != new_node:  # Avoid self-loops and multi-edges
+                    if node != new_node and not G.has_edge(new_node, node):  # Avoid self-loops and multi-edges
                         targets.add(node)
                     break
 
