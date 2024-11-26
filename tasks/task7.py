@@ -148,6 +148,17 @@ def plot_degree_distribution(G: nx.Graph, m: int, file_name: str, directory_pref
     plt.close()
 
 
+def check_graph_properties(G: nx.Graph, graph_name: str):
+    if has_graph_loops(G) and has_graph_multi_edges(G):
+        raise ValueError(f"{graph_name} has loops and multi-edges")
+    elif has_graph_loops(G):
+        raise ValueError(f"{graph_name} has loops")
+    elif has_graph_multi_edges(G):
+        raise ValueError(f"{graph_name} has multi-edges")
+    else:
+        print(f"{graph_name} has no loops or multi-edges\n")
+
+
 def main():
     m_sizes = [2, 3]
     target_nodes_count = 550
@@ -162,6 +173,7 @@ def main():
     for m in m_sizes:
         initial_node_count = random.randint(*STARTING_NODES_COUNT_RANGE)
         G = generate_connected_graph(initial_node_count)
+        check_graph_properties(G, "Initial graph")
         initial_edge_count = G.number_of_edges()
         BA_G = create_barabasi_albert_graph(G, m, target_nodes_count)
         print(f"Generated Barabasi-Albert graph with m={m}, n={target_nodes_count}")
@@ -169,13 +181,9 @@ def main():
         print(f"Number of edges: {BA_G.number_of_edges()}")
         print(f"Number of initial nodes: {initial_node_count}")
         print(f"Number of initial edges: {initial_edge_count}")
-        if not has_graph_loops(BA_G) or not has_graph_multi_edges(BA_G):
-            print("Graph has loops or multi-edges. Saving graph to CSV files...")
-            save_edges_to_csv(list(BA_G.edges), f"BA_{m}", directory_prefix)
-        else:
-            print("Graph has loops or multi-edges")
-            continue
-        print()
+        # if graph has loops or multi-edges, raise an error, otherwise save the nodes and edges to CSV
+        check_graph_properties(BA_G, "Barabasi-Albert graph")
+        save_edges_to_csv(list(BA_G.edges), "edges", directory_prefix)
         graph_properties = calculate_graph_properties(BA_G, initial_node_count, initial_edge_count)
         data.append(graph_properties)
         plot_degree_distribution(BA_G, m, f"BA_{m}_degree_distribution", directory_prefix)
