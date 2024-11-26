@@ -183,7 +183,7 @@ def main():
         print(f"Number of initial edges: {initial_edge_count}")
         # if graph has loops or multi-edges, raise an error, otherwise save the nodes and edges to CSV
         check_graph_properties(BA_G, "Barabasi-Albert graph")
-        save_edges_to_csv(list(BA_G.edges), "edges", directory_prefix)
+        save_edges_to_csv(list(BA_G.edges), f"BA_{m}", directory_prefix)
         graph_properties = calculate_graph_properties(BA_G, initial_node_count, initial_edge_count)
         data.append(graph_properties)
         plot_degree_distribution(BA_G, m, f"BA_{m}_degree_distribution", directory_prefix)
