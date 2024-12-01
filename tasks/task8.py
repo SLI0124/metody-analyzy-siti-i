@@ -61,6 +61,35 @@ def random_walk_sampling(G, start_node, size):
     return subgraph
 
 
+def snowball_sampling(G, start_node, size, nv):
+    visited_nodes = {start_node}  # Set to track visited nodes
+    nodes_to_visit = [start_node]  # List of nodes to visit (starting with the start_node)
+    sampled_nodes = [start_node]  # List of sampled nodes
+
+    while len(sampled_nodes) < size and nodes_to_visit:
+        current_node = nodes_to_visit.pop(0)  # BFS-like behavior
+
+        neighbors = list(G.neighbors(current_node))  # List of neighbors of the current node
+
+        # Randomly sample `nv` neighbors, but only add them if they haven't been visited
+        unvisited_neighbors = [n for n in neighbors if n not in visited_nodes]
+        sampled_neighbors = random.sample(unvisited_neighbors, min(nv, len(unvisited_neighbors)))
+
+        # Add sampled neighbors to visited nodes and to nodes to visit
+        for neighbor in sampled_neighbors:
+            if neighbor not in visited_nodes:
+                visited_nodes.add(neighbor)
+                nodes_to_visit.append(neighbor)
+                sampled_nodes.append(neighbor)
+
+        if len(sampled_nodes) >= size:  # Stop if we've sampled enough nodes
+            break
+
+    # Create a subgraph of the sampled nodes
+    subgraph = G.subgraph(sampled_nodes).copy()
+    return subgraph
+
+
 def main():
     n = 5_000  # Number of nodes in the graph
     m = 2  # Number of edges to attach from a new node to existing nodes
@@ -95,6 +124,11 @@ def main():
     start_node = random.choice(list(G_BA.nodes()))
     sampled_graph = random_walk_sampling(G_BA, start_node, desired_size)
     print_graph_info(sampled_graph, "Random Walk Sample")
+
+    # Perform snowball sampling
+    start_node = random.choice(list(G_BA.nodes()))
+    sampled_graph = snowball_sampling(G_BA, start_node, desired_size, 5)
+    print_graph_info(sampled_graph, "Snowball Sample")
 
 
 if __name__ == "__main__":
