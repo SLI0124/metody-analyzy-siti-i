@@ -1,4 +1,6 @@
+import os
 import random
+import matplotlib.pyplot as plt
 from task7 import check_graph_properties, generate_connected_graph, create_barabasi_albert_graph, \
     STARTING_NODES_COUNT_RANGE
 
@@ -94,6 +96,35 @@ def snowball_sampling(G, start_node, size, nv):
     return subgraph
 
 
+def plot_degree_distributions(graph_dict, save_directory):
+    plt.figure(figsize=(10, 6))
+
+    for graph_name, G in graph_dict.items():
+        degrees = [deg for node, deg in G.degree()]
+
+        degree_counts = {}  # Count the frequency of each degree
+        for degree in degrees:
+            degree_counts[degree] = degree_counts.get(degree, 0) + 1
+
+        degree_values = sorted(degree_counts.keys())
+        counts = [degree_counts[deg] for deg in degree_values]
+
+        # Plot on log-log scale
+        plt.loglog(degree_values, counts, label=graph_name, marker='o', linestyle='-')
+
+    plt.title("Degree Distributions (Log-Log Scale)")
+    plt.xlabel("Degree (log scale)")
+    plt.ylabel("Count (log scale)")
+    plt.legend()
+    plt.grid(True)
+    plt.xlim(left=1)  # Avoid zero on log scale
+
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
+    plt.savefig(f"{save_directory}/degree_distributions.png")
+
+
 def main():
     n = 5_000  # Number of nodes in the graph
     m = 2  # Number of edges to attach from a new node to existing nodes
@@ -133,6 +164,16 @@ def main():
     start_node = random.choice(list(G_BA.nodes()))
     sampled_graph = snowball_sampling(G_BA, start_node, desired_size, 5)
     print_graph_info(sampled_graph, "Snowball Sample")
+
+    graph_dict = {
+        "Barabasi-Albert": G_BA,
+        "Random Node Sample": random_node_sampling(G_BA, desired_size),
+        "Random Edge Sample": random_edge_sampling(G_BA, desired_size),
+        "Random Walk Sample": random_walk_sampling(G_BA, start_node, desired_size),
+        "Snowball Sample": snowball_sampling(G_BA, start_node, desired_size, 5)
+    }
+
+    plot_degree_distributions(graph_dict, "../results/task8")
 
 
 if __name__ == "__main__":
