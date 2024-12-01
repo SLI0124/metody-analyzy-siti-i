@@ -1,6 +1,7 @@
 import os
 import random
 import matplotlib.pyplot as plt
+from scipy.stats import ks_2samp
 from task7 import check_graph_properties, generate_connected_graph, create_barabasi_albert_graph, \
     STARTING_NODES_COUNT_RANGE
 
@@ -96,16 +97,30 @@ def snowball_sampling(G, start_node, size, nv):
     return subgraph
 
 
-def plot_degree_distributions(graph_dict, save_directory):
-    plt.figure(figsize=(10, 6))
+def calculate_d_value(original_graph, sampled_graph):
+    # Get the degree distribution of the original graph
+    original_degrees = [deg for node, deg in original_graph.degree()]
 
-    for graph_name, G in graph_dict.items():
-        degrees = [deg for node, deg in G.degree()]
+    # Get the degree distribution of the sampled graph
+    sampled_degrees = [deg for node, deg in sampled_graph.degree()]
 
-        degree_counts = {}  # Count the frequency of each degree
+    # Perform KS test to compare the degree distributions
+    ks_statistic, p_value = ks_2samp(original_degrees, sampled_degrees)
+
+    return ks_statistic, p_value
+
+
+# Function to plot degree distributions and KS statistics
+def plot_results(original_graph, graph_dict, ks_results, save_directory):
+    # Plot degree distributions of all graphs
+    plt.figure(figsize=(12, 8))
+
+    # Plot the degree distributions of the graphs
+    for graph_name, G_sample in graph_dict.items():
+        degrees = [deg for node, deg in G_sample.degree()]
+        degree_counts = {}
         for degree in degrees:
             degree_counts[degree] = degree_counts.get(degree, 0) + 1
-
         degree_values = sorted(degree_counts.keys())
         counts = [degree_counts[deg] for deg in degree_values]
 
@@ -117,12 +132,28 @@ def plot_degree_distributions(graph_dict, save_directory):
     plt.ylabel("Count (log scale)")
     plt.legend()
     plt.grid(True)
-    plt.xlim(left=1)  # Avoid zero on log scale
+    plt.xlim(left=1)
 
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
 
     plt.savefig(f"{save_directory}/degree_distributions.png")
+    plt.show()
+
+    # Plot KS statistics for each sampling method
+    ks_statistics = [ks[0] for ks in ks_results]
+    sampling_methods = list(graph_dict.keys())
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(sampling_methods, ks_statistics, color='blue')
+    plt.title("KS Statistic for Degree Distributions")
+    plt.xlabel("Sampling Method")
+    plt.ylabel("KS Statistic")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    plt.savefig(f"{save_directory}/ks_statistics.png")
+    plt.show()
 
 
 def main():
@@ -173,7 +204,16 @@ def main():
         "Snowball Sample": snowball_sampling(G_BA, start_node, desired_size, 5)
     }
 
-    plot_degree_distributions(graph_dict, "../results/task8")
+    # Calculate KS statistic and p-value for each sampling method
+    ks_results = []
+    for graph_name, G_sample in graph_dict.items():
+        ks_statistic, p_value = calculate_d_value(G_BA, G_sample)
+        ks_results.append((ks_statistic, p_value))
+        print(f"KS Statistic for {graph_name}: {ks_statistic}, p-value: {p_value}")
+
+    # Plot the results
+    save_directory = "task8_results"
+    plot_results(G_BA, graph_dict, ks_results, save_directory)
 
 
 if __name__ == "__main__":
