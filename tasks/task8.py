@@ -85,6 +85,10 @@ def snowball_sampling(G, start_node, size, nv):
         if len(sampled_nodes) >= size:  # Stop if we've sampled enough nodes
             break
 
+    # if the number of sampled nodes is more than the desired size, remove the extra nodes
+    if len(sampled_nodes) > size:
+        sampled_nodes = random.sample(sampled_nodes, size)
+
     # Create a subgraph of the sampled nodes
     subgraph = G.subgraph(sampled_nodes).copy()
     return subgraph
