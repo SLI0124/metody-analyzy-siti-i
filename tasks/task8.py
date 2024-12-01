@@ -183,7 +183,7 @@ def main():
         ks_results.append((ks_statistic, p_value))
         print(f"KS Statistic for {graph_name}: {ks_statistic}, p-value: {p_value}")
 
-    save_directory = "task8_results"
+    save_directory = "../results/task8"
     plot_degree_distributions(graph_dict, save_directory)
     plot_ks_statistics(ks_results, graph_dict, save_directory)
 
