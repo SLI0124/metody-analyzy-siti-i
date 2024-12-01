@@ -35,6 +35,26 @@ def random_edge_sampling(G, sample_size):
     return subgraph
 
 
+def random_walk_sampling(G, start_node, size):
+    current_node = start_node
+    visited_nodes = {current_node}
+    walk = [current_node]
+
+    # Keep walking until we've visited the desired number of nodes
+    while len(visited_nodes) < size:
+        neighbors = list(G.neighbors(current_node))  # List of neighbors of the current node
+        if not neighbors:
+            break  # Stop if there are no neighbors (isolated node)
+        next_node = random.choice(neighbors)  # Randomly choose a neighbor
+        if next_node not in visited_nodes:
+            visited_nodes.add(next_node)
+            walk.append(next_node)
+        current_node = next_node
+
+    subgraph = G.subgraph(visited_nodes).copy()  # Create the subgraph with visited nodes
+    return subgraph
+
+
 def print_graph_info(G, name):
     check_graph_properties(G, name)
     print(f"Number of nodes in the {name} graph: {G.number_of_nodes()}")
@@ -70,6 +90,11 @@ def main():
     # Perform random edge sampling
     sampled_graph = random_edge_sampling(G_BA, desired_size)
     print_graph_info(sampled_graph, "Random Edge Sample")
+
+    # Perform random walk sampling
+    start_node = random.choice(list(G_BA.nodes()))
+    sampled_graph = random_walk_sampling(G_BA, start_node, desired_size)
+    print_graph_info(sampled_graph, "Random Walk Sample")
 
 
 if __name__ == "__main__":
