@@ -20,6 +20,7 @@ def random_node_sampling(G, sample_size):
     subgraph = G.subgraph(selected_nodes).copy()  # create a subgraph from the selected nodes
     subgraph.add_edges_from(edges_in_sample)
 
+    print_graph_info(subgraph, "Random Node Sample")
     return subgraph
 
 
@@ -40,6 +41,7 @@ def random_edge_sampling(G, sample_size):
 
     subgraph = G.subgraph(nodes_in_sample).copy()  # Create the subgraph with nodes in sample
     subgraph.add_edges_from(sampled_edges)  # Add the sampled edges to the subgraph
+    print_graph_info(subgraph, "Random Edge Sample")
 
     return subgraph
 
@@ -61,6 +63,8 @@ def random_walk_sampling(G, start_node, size):
         current_node = next_node
 
     subgraph = G.subgraph(visited_nodes).copy()  # Create the subgraph with visited nodes
+    print_graph_info(subgraph, "Random Walk Sample")
+
     return subgraph
 
 
@@ -94,37 +98,26 @@ def snowball_sampling(G, start_node, size, nv):
 
     # Create a subgraph of the sampled nodes
     subgraph = G.subgraph(sampled_nodes).copy()
+    print_graph_info(subgraph, "Snowball Sample")
+
     return subgraph
 
 
-def calculate_d_value(original_graph, sampled_graph):
-    # Get the degree distribution of the original graph
-    original_degrees = [deg for node, deg in original_graph.degree()]
-
-    # Get the degree distribution of the sampled graph
-    sampled_degrees = [deg for node, deg in sampled_graph.degree()]
-
-    # Perform KS test to compare the degree distributions
-    ks_statistic, p_value = ks_2samp(original_degrees, sampled_degrees)
+def calculate_ks_statistic(original_graph, sampled_graph):
+    original_degrees = [deg for node, deg in original_graph.degree()]  # degree distribution of original graph
+    sampled_degrees = [deg for node, deg in sampled_graph.degree()]  # degree distribution of sampled graph
+    ks_statistic, p_value = ks_2samp(original_degrees, sampled_degrees)  # calculate KS statistic and p-value
 
     return ks_statistic, p_value
 
 
-# Function to plot degree distributions and KS statistics
-def plot_results(original_graph, graph_dict, ks_results, save_directory):
-    # Plot degree distributions of all graphs
+def plot_degree_distributions(graph_dict, save_directory):
     plt.figure(figsize=(12, 8))
-
-    # Plot the degree distributions of the graphs
     for graph_name, G_sample in graph_dict.items():
         degrees = [deg for node, deg in G_sample.degree()]
-        degree_counts = {}
-        for degree in degrees:
-            degree_counts[degree] = degree_counts.get(degree, 0) + 1
+        degree_counts = {deg: degrees.count(deg) for deg in set(degrees)}
         degree_values = sorted(degree_counts.keys())
         counts = [degree_counts[deg] for deg in degree_values]
-
-        # Plot on log-log scale
         plt.loglog(degree_values, counts, label=graph_name, marker='o', linestyle='-')
 
     plt.title("Degree Distributions (Log-Log Scale)")
@@ -134,13 +127,12 @@ def plot_results(original_graph, graph_dict, ks_results, save_directory):
     plt.grid(True)
     plt.xlim(left=1)
 
-    if not os.path.exists(save_directory):
-        os.makedirs(save_directory)
-
+    os.makedirs(save_directory, exist_ok=True)
     plt.savefig(f"{save_directory}/degree_distributions.png")
     plt.show()
 
-    # Plot KS statistics for each sampling method
+
+def plot_ks_statistics(ks_results, graph_dict, save_directory):
     ks_statistics = [ks[0] for ks in ks_results]
     sampling_methods = list(graph_dict.keys())
 
@@ -159,42 +151,23 @@ def plot_results(original_graph, graph_dict, ks_results, save_directory):
 def main():
     n = 5_000  # Number of nodes in the graph
     m = 2  # Number of edges to attach from a new node to existing nodes
-    desired_size = int(n * 0.15)  # Desired size of the sampled graph
+    desired_size = int(n * 0.15)
 
-    # Generate an initial connected graph
     initial_node_count = random.randint(*STARTING_NODES_COUNT_RANGE)
     G = generate_connected_graph(initial_node_count)
     check_graph_properties(G, "initial")
     print(f"Number of nodes in the graph: {G.number_of_nodes()}")
     print(f"Number of edges in the graph: {G.number_of_edges()}\n")
 
-    # Create a Barabási–Albert graph
     G_BA = create_barabasi_albert_graph(G, m, n)
     print(f"Generated Barabasi-Albert graph with m={m}, n={n}")
     print(f"Number of nodes in the graph: {G_BA.number_of_nodes()}")
     print(f"Number of edges in the graph: {G_BA.number_of_edges()}")
 
-    # Calculate the average degree
     average_degree = sum(dict(G_BA.degree()).values()) / G_BA.number_of_nodes()
     print(f"Average degree of the Barabasi-Albert graph: {average_degree}\n")
 
-    # Perform random node sampling
-    sampled_graph = random_node_sampling(G_BA, desired_size)
-    print_graph_info(sampled_graph, "Random Node Sample")
-
-    # Perform random edge sampling
-    sampled_graph = random_edge_sampling(G_BA, desired_size)
-    print_graph_info(sampled_graph, "Random Edge Sample")
-
-    # Perform random walk sampling
     start_node = random.choice(list(G_BA.nodes()))
-    sampled_graph = random_walk_sampling(G_BA, start_node, desired_size)
-    print_graph_info(sampled_graph, "Random Walk Sample")
-
-    # Perform snowball sampling
-    start_node = random.choice(list(G_BA.nodes()))
-    sampled_graph = snowball_sampling(G_BA, start_node, desired_size, 5)
-    print_graph_info(sampled_graph, "Snowball Sample")
 
     graph_dict = {
         "Barabasi-Albert": G_BA,
@@ -204,16 +177,15 @@ def main():
         "Snowball Sample": snowball_sampling(G_BA, start_node, desired_size, 5)
     }
 
-    # Calculate KS statistic and p-value for each sampling method
     ks_results = []
     for graph_name, G_sample in graph_dict.items():
-        ks_statistic, p_value = calculate_d_value(G_BA, G_sample)
+        ks_statistic, p_value = calculate_ks_statistic(G_BA, G_sample)
         ks_results.append((ks_statistic, p_value))
         print(f"KS Statistic for {graph_name}: {ks_statistic}, p-value: {p_value}")
 
-    # Plot the results
     save_directory = "task8_results"
-    plot_results(G_BA, graph_dict, ks_results, save_directory)
+    plot_degree_distributions(graph_dict, save_directory)
+    plot_ks_statistics(ks_results, graph_dict, save_directory)
 
 
 if __name__ == "__main__":
