@@ -83,3 +83,15 @@ Naimplementujte (tj. sami, nesmíte použít žádnou knihovní funkci) model pr
   průměrná vzdálenost přes jednotlivé komponenty souvislosti), shlukovací koeficient a distribuce stupňů, komunitní
   struktura, centrality).
 - Sítě vizualizujte.
+
+## Cvičení 8
+
+- Cvičení - Vygenerujte síť dle modelu prefernčního připojování s n = 5000 (počet vrcholů) a m = 2 (počet hran pro každý
+  nový vrchol).
+    - Vytvořte tři různé vzorky o velikosti 15% původního počtu vrcholů. Tj. použijte tři různé vzorkovací metody.
+    - Buď si je naimplementujte sami nebo můžete využít knihovnu
+        - [zde](https://github.com/Ashish7129/Graph_Sampling). Pozor jsou tam chyby!
+        - nebo [tuto](https://github.com/benedekrozemberczki/littleballoffur).
+    - Vizuálně porovnejte distribuci stupňů pro původní síť a pro všechny 3 vzorky (viz snímek 27 z přednášy).
+    - Určete D-value podle KS testu - porovnejte distribuci stupňů původní sítě s distribuci stupňů každého vzorku (např
+      scipy ks_2samp()).
