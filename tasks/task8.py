@@ -4,13 +4,33 @@ from task7 import check_graph_properties, generate_connected_graph, create_barab
 
 
 def random_node_sampling(G, sample_size):
-    """Random node sampling algorithm."""
     nodes = random.sample(list(G.nodes()), sample_size)  # randomly select a sample of nodes
     selected_nodes = set(nodes)  # set of selected nodes
     # select edges where both endpoints are in the sample set VS
     edges_in_sample = [(u, v) for u, v in G.edges() if u in selected_nodes and v in selected_nodes]
     subgraph = G.subgraph(selected_nodes).copy()  # create a subgraph from the selected nodes
     subgraph.add_edges_from(edges_in_sample)
+
+    return subgraph
+
+
+def random_edge_sampling(G, sample_size):
+    sampled_edges = []
+    nodes_in_sample = set()
+
+    while len(nodes_in_sample) < sample_size:
+        # Select an edge based on the degree of nodes (degree(u) + degree(v) probability)
+        edge = random.choices(list(G.edges()), weights=[G.degree(u) + G.degree(v) for u, v in G.edges()])[0]
+        u, v = edge
+
+        # Only add the edge if both nodes are not already in the sample
+        if u not in nodes_in_sample or v not in nodes_in_sample:
+            sampled_edges.append(edge)
+            nodes_in_sample.add(u)
+            nodes_in_sample.add(v)
+
+    subgraph = G.subgraph(nodes_in_sample).copy()  # Create the subgraph with nodes in sample
+    subgraph.add_edges_from(sampled_edges)  # Add the sampled edges to the subgraph
 
     return subgraph
 
@@ -45,7 +65,11 @@ def main():
 
     # Perform random node sampling
     sampled_graph = random_node_sampling(G_BA, desired_size)
-    print_graph_info(sampled_graph, "Random Node Sampled")
+    print_graph_info(sampled_graph, "Random Node Sample")
+
+    # Perform random edge sampling
+    sampled_graph = random_edge_sampling(G_BA, desired_size)
+    print_graph_info(sampled_graph, "Random Edge Sample")
 
 
 if __name__ == "__main__":
