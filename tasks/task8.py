@@ -3,6 +3,12 @@ from task7 import check_graph_properties, generate_connected_graph, create_barab
     STARTING_NODES_COUNT_RANGE
 
 
+def print_graph_info(G, name):
+    check_graph_properties(G, name)
+    print(f"Number of nodes in the {name} graph: {G.number_of_nodes()}")
+    print(f"Number of edges in the {name} graph: {G.number_of_edges()}\n")
+
+
 def random_node_sampling(G, sample_size):
     nodes = random.sample(list(G.nodes()), sample_size)  # randomly select a sample of nodes
     selected_nodes = set(nodes)  # set of selected nodes
@@ -53,12 +59,6 @@ def random_walk_sampling(G, start_node, size):
 
     subgraph = G.subgraph(visited_nodes).copy()  # Create the subgraph with visited nodes
     return subgraph
-
-
-def print_graph_info(G, name):
-    check_graph_properties(G, name)
-    print(f"Number of nodes in the {name} graph: {G.number_of_nodes()}")
-    print(f"Number of edges in the {name} graph: {G.number_of_edges()}\n")
 
 
 def main():
