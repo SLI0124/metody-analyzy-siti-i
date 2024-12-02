@@ -10,7 +10,8 @@ from task7 import check_graph_properties, generate_connected_graph, create_barab
 def print_graph_info(G, name):
     check_graph_properties(G, name)
     print(f"Number of nodes in the {name} graph: {G.number_of_nodes()}")
-    print(f"Number of edges in the {name} graph: {G.number_of_edges()}\n")
+    print(f"Number of edges in the {name} graph: {G.number_of_edges()}")
+    print(f"Average degree of the {name} graph: {sum(dict(G.degree()).values()) / G.number_of_nodes()}\n")
 
 
 def random_node_sampling(G, sample_size):
@@ -192,9 +193,6 @@ def main():
     print(f"Generated Barabasi-Albert graph with m={m}, n={n}")
     print(f"Number of nodes in the graph: {G_BA.number_of_nodes()}")
     print(f"Number of edges in the graph: {G_BA.number_of_edges()}")
-
-    average_degree = sum(dict(G_BA.degree()).values()) / G_BA.number_of_nodes()
-    print(f"Average degree of the Barabasi-Albert graph: {average_degree}\n")
 
     start_node = random.choice(list(G_BA.nodes()))
 
