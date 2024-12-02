@@ -1,6 +1,7 @@
 import os
 import random
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.stats import ks_2samp
 from task7 import check_graph_properties, generate_connected_graph, create_barabasi_albert_graph, \
     STARTING_NODES_COUNT_RANGE
@@ -133,19 +134,32 @@ def plot_degree_distributions(graph_dict, save_directory):
 
 
 def plot_ks_statistics(ks_results, graph_dict, save_directory):
-    ks_statistics = [ks[0] for ks in ks_results]
-    sampling_methods = list(graph_dict.keys())
+    for (graph_name, G_sample), (ks_statistic, p_value) in zip(graph_dict.items(), ks_results):
+        if graph_name == "Barabasi-Albert":
+            continue  # Skip the original Barabasi-Albert model
 
-    plt.figure(figsize=(10, 6))
-    plt.bar(sampling_methods, ks_statistics, color='blue')
-    plt.title("KS Statistic for Degree Distributions")
-    plt.xlabel("Sampling Method")
-    plt.ylabel("KS Statistic")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+        plt.figure(figsize=(12, 8))
 
-    plt.savefig(f"{save_directory}/ks_statistics.png")
-    plt.show()
+        original_degrees = [deg for node, deg in graph_dict["Barabasi-Albert"].degree()]
+        sampled_degrees = [deg for node, deg in G_sample.degree()]
+
+        # Calculate the empirical CDFs
+        original_cdf = np.cumsum(np.bincount(original_degrees)) / len(original_degrees)
+        sampled_cdf = np.cumsum(np.bincount(sampled_degrees)) / len(sampled_degrees)
+
+        # Plot the CDFs
+        plt.step(range(len(original_cdf)), original_cdf, label="Original", where='post')
+        plt.step(range(len(sampled_cdf)), sampled_cdf, label="Sampled", linestyle='--', where='post')
+
+        plt.title(f"Empirical CDFs of Degree Distributions for {graph_name} (KS: {ks_statistic:.4f})")
+        plt.xlabel("Degree")
+        plt.ylabel("Cumulative Probability")
+        plt.legend()
+        plt.grid(True)
+
+        os.makedirs(save_directory, exist_ok=True)
+        plt.savefig(f"{save_directory}/ks_statistics_curve_{graph_name}.png")
+        plt.show()
 
 
 def main():
