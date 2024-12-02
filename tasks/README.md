@@ -95,3 +95,24 @@ Naimplementujte (tj. sami, nesmíte použít žádnou knihovní funkci) model pr
     - Vizuálně porovnejte distribuci stupňů pro původní síť a pro všechny 3 vzorky (viz snímek 27 z přednášy).
     - Určete D-value podle KS testu - porovnejte distribuci stupňů původní sítě s distribuci stupňů každého vzorku (např
       scipy ks_2samp()).
+
+## Cvičení 9
+
+- Cvičení 1. úkol:
+
+    - Generování dat - vygenerujte pět různých datových sad s těmito rozděleními: normální, exponenciální, mocninné,
+    - Poissonovo a lognormální (např. knihovna numpy a např numpy.random.normal()).
+    - Fitování rozdělení - např. scipy.stats.norm.fit() pro normální rozdělení a powerlaw.Fit() pro mocninné rozdělení.
+    - Vizualizace - histogram každého datasetu s překrytou fitovanou hustotou.
+    - Statistická validace - použijte KS-test (scipy.stats.kstest()).
+
+- Cvičení 2. úkol:
+
+    - Vygeneruj dvě sítě, každou s 5500 vrcholy. Jedna bude náhodná podle modelu náhodného grafu a druhá podle modelu
+      prefernčního připojování.
+    - Vygeneruj a vykresli distribuci stupňů v lineárním měřítku, v logaritmickém měřítku. Pozor na logaritmus nuly.
+    - Vvygeneruj a vykresli také CDF a CCDF.
+    - Pro distribuce stupňů obou sítí a CCDF proveď fitování Poissonova, normálního, exponenciálního a mocninného
+      rozdělení.
+    - Vykresli CCDF s překrytými fitovanými rozděleními.
+
