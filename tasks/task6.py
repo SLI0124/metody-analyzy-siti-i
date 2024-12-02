@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 
-def generate_graph(n: int, p: float) -> list:
+def generate_random_graph(n: int, p: float) -> list:
     """Generate a random graph with n nodes and probability p
     :param n: number of nodes
     :param p: probability of edge creation
@@ -278,7 +278,7 @@ def main():
     save_nodes_to_csv(list(range(n)), f"graph_n_{n}", directory_prefix)
 
     for p in p_values:
-        edges = generate_graph(n, p)
+        edges = generate_random_graph(n, p)
         print(f"Graph with n={n} and p={p}")
         print(f"Number of edges: {len(edges)}")
 
