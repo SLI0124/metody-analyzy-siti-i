@@ -121,9 +121,9 @@ def plot_degree_distributions(graph_dict, save_directory):
         counts = [degree_counts[deg] for deg in degree_values]
         plt.loglog(degree_values, counts, label=graph_name, marker='o', linestyle='-')
 
-    plt.title("Degree Distributions (Log-Log Scale)")
-    plt.xlabel("Degree (log scale)")
-    plt.ylabel("Count (log scale)")
+    plt.title("Degree Distributions")
+    plt.xlabel("Degree")
+    plt.ylabel("Count")
     plt.legend()
     plt.grid(True)
     plt.xlim(left=1)
@@ -134,32 +134,47 @@ def plot_degree_distributions(graph_dict, save_directory):
 
 
 def plot_ks_statistics(ks_results, graph_dict, save_directory):
+    plt.figure(figsize=(12, 8))
+
+    # Get the degree distributions of the original Barabási-Albert graph
+    original_degrees = [deg for node, deg in graph_dict["Barabasi-Albert"].degree()]
+    max_degree = max(original_degrees)
+    original_degree_counts = np.bincount(original_degrees)
+
+    # Compute the relative cumulative frequency for the original graph
+    original_cdf = np.cumsum(original_degree_counts) / sum(original_degree_counts)
+    relative_degrees = np.arange(len(original_cdf)) / max_degree  # Normalized degrees
+
+    # Plot the CDF of the original Barabási-Albert graph
+    plt.step(relative_degrees, original_cdf, label="Original (Barabási-Albert)", where='post')
+
+    # Plot the CDFs of the sampled graphs and their KS statistics
     for (graph_name, G_sample), (ks_statistic, p_value) in zip(graph_dict.items(), ks_results):
         if graph_name == "Barabasi-Albert":
-            continue  # Skip the original Barabasi-Albert model
+            continue  # Skip the original Barabási-Albert model
 
-        plt.figure(figsize=(12, 8))
-
-        original_degrees = [deg for node, deg in graph_dict["Barabasi-Albert"].degree()]
         sampled_degrees = [deg for node, deg in G_sample.degree()]
+        max_sampled_degree = max(sampled_degrees)
+        sampled_degree_counts = np.bincount(sampled_degrees)
 
-        # Calculate the empirical CDFs
-        original_cdf = np.cumsum(np.bincount(original_degrees)) / len(original_degrees)
-        sampled_cdf = np.cumsum(np.bincount(sampled_degrees)) / len(sampled_degrees)
+        # Compute the relative cumulative frequency for the sampled graph
+        sampled_cdf = np.cumsum(sampled_degree_counts) / sum(sampled_degree_counts)
+        relative_sampled_degrees = np.arange(len(sampled_cdf)) / max_sampled_degree  # Normalized degrees
 
-        # Plot the CDFs
-        plt.step(range(len(original_cdf)), original_cdf, label="Original", where='post')
-        plt.step(range(len(sampled_cdf)), sampled_cdf, label="Sampled", linestyle='--', where='post')
+        # Plot the CDF of the sampled graph
+        plt.step(relative_sampled_degrees, sampled_cdf, label=f"{graph_name} (KS: {ks_statistic:.4f})", linestyle='--',
+                 where='post')
 
-        plt.title(f"Empirical CDFs of Degree Distributions for {graph_name} (KS: {ks_statistic:.4f})")
-        plt.xlabel("Degree")
-        plt.ylabel("Cumulative Probability")
-        plt.legend()
-        plt.grid(True)
+    plt.title("Degree Cumulative Distributions")
+    plt.xlabel("Relative Degree")
+    plt.ylabel("Relative Cumulative Frequency")
+    plt.legend()
+    plt.grid(True)
 
-        os.makedirs(save_directory, exist_ok=True)
-        plt.savefig(f"{save_directory}/ks_statistics_curve_{graph_name}.png")
-        plt.show()
+    # Create directory if not exists and save the plot
+    os.makedirs(save_directory, exist_ok=True)
+    plt.savefig(f"{save_directory}/ks_statistics_all.png")
+    plt.show()
 
 
 def main():
