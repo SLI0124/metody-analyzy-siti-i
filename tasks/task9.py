@@ -135,8 +135,44 @@ def plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path):
     plt.savefig(os.path.join(save_path, 'degree_distributions.png'))
 
 
-def plot_cdf_ccdf(data, title):
-    pass
+def plot_cdf_ccdf(G_BA, G_RND, save_path):
+    BA_degrees = [degree for node, degree in G_BA.degree()]
+    BA_degrees = np.sort(BA_degrees)
+
+    cdf_BA = np.arange(1, len(BA_degrees) + 1) / len(BA_degrees)
+    ccdf_BA = 1 - cdf_BA
+
+    RND_degrees = [degree for node, degree in G_RND.degree()]
+    RND_degrees = np.sort(RND_degrees)
+
+    cdf_RND = np.arange(1, len(RND_degrees) + 1) / len(RND_degrees)
+    ccdf_RND = 1 - cdf_RND
+
+    # plot four subplots in 2 rows and 2 columns
+    fig, axes = plt.subplots(2, 2, figsize=(15, 15))
+
+    # plot CDF for Barabasi-Albert graph
+    axes[0, 0].plot(BA_degrees, cdf_BA, 'b-', marker='o')
+    axes[0, 0].set_title('CDF - Barabasi-Albert')
+
+    # plot CCDF for Barabasi-Albert graph
+    axes[0, 1].plot(BA_degrees, ccdf_BA, 'b-', marker='o')
+    axes[0, 1].set_title('CCDF - Barabasi-Albert')
+
+    # plot CDF for Random graph
+    axes[1, 0].plot(RND_degrees, cdf_RND, 'r-', marker='o')
+    axes[1, 0].set_title('CDF - Random')
+
+    # plot CCDF for Random graph
+    axes[1, 1].plot(RND_degrees, ccdf_RND, 'r-', marker='o')
+    axes[1, 1].set_title('CCDF - Random')
+
+    plt.tight_layout()
+
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    plt.savefig(os.path.join(save_path, 'cdf_ccdf.png'))
 
 
 def main():
@@ -165,6 +201,7 @@ def main():
     print_graph_info(G_RND, "Random")
 
     plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path)
+    plot_cdf_ccdf(G_BA, G_RND, save_path)
 
 
 if __name__ == '__main__':
