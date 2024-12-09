@@ -93,6 +93,35 @@ def plot_distributions_subplots(data_dict, fitted_distributions, save_path):
     plt.savefig(os.path.join(save_path, 'fitted_distributions.png'))
 
 
+def plot_ks_statistic(data_dict, fitted_distributions, save_path):
+    ks_statistics = []
+    for key, data in data_dict.items():
+        dist_name, params = fitted_distributions[key]
+        ks_statistic = None
+        if dist_name == 'norm':
+            ks_statistic = stats.kstest(data, 'norm', args=params)
+        elif dist_name == 'expon':
+            ks_statistic = stats.kstest(data, 'expon', args=params)
+        elif dist_name == 'powerlaw':
+            ks_statistic = stats.kstest(data, 'powerlaw', args=params)
+        elif dist_name == 'poisson':
+            ks_statistic = stats.kstest(data, 'poisson', args=(params,))
+        elif dist_name == 'lognorm':
+            ks_statistic = stats.kstest(data, 'lognorm', args=params)
+        ks_statistics.append(ks_statistic)
+
+        print(f'{key.capitalize()} distribution KS statistic: {ks_statistic}')
+
+    ks_statistics.sort(key=lambda x: x.statistic)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(data_dict.keys(), [statistic.statistic for statistic in ks_statistics], color='skyblue')
+    ax.set_title('KS Statistic for Fitted Distributions')
+    ax.set_ylabel('KS Statistic')
+    ax.set_xlabel('Distribution')
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_path, 'ks_statistics.png'))
+
+
 def plot_linear_and_log_degree_distributions(input_g_ba, intput_g_rnd, save_path):
     ba_degrees = [degree for node, degree in input_g_ba.degree()]
     ba_degree_counts = np.bincount(ba_degrees)
@@ -218,6 +247,8 @@ def main():
     data_dict = generate_data()
     fitted_distributions = fit_distributions(data_dict)
     plot_distributions_subplots(data_dict, fitted_distributions, save_path)
+    plot_ks_statistic(data_dict, fitted_distributions, save_path)
+
     for key, value in fitted_distributions.items():
         print(f'{key.capitalize()} distribution: {value}\n')
 
