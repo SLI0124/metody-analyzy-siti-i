@@ -175,6 +175,53 @@ def plot_cdf_ccdf(G_BA, G_RND, save_path):
     plt.savefig(os.path.join(save_path, 'cdf_ccdf.png'))
 
 
+def fit_and_plot_ccdf(graph, title, subplot_index):
+    """
+    Fit and plot CCDF with Poisson, Normal, Exponential, and Power-law fits.
+
+    Args:
+        graph: NetworkX graph object.
+        title: Title for the plot.
+        subplot_index: Subplot index for positioning.
+    """
+    # Compute degrees and sort them
+    degrees = np.array([d for _, d in graph.degree()])
+    sorted_degrees = np.sort(degrees)
+
+    # Calculate CCDF
+    ccdf = 1 - (np.arange(1, len(sorted_degrees) + 1) / len(sorted_degrees))
+
+    # Fit distributions
+    # Poisson
+    lambda_poisson = np.mean(degrees)
+    poisson_ccdf = 1 - stats.poisson.cdf(sorted_degrees, mu=lambda_poisson)
+
+    # Normal
+    mu_normal, sigma_normal = stats.norm.fit(degrees)
+    normal_ccdf = 1 - stats.norm.cdf(sorted_degrees, loc=mu_normal, scale=sigma_normal)
+
+    # Exponential
+    loc_expon, scale_expon = stats.expon.fit(degrees)
+    expon_ccdf = 1 - stats.expon.cdf(sorted_degrees, loc=loc_expon, scale=scale_expon)
+
+    # Power-law
+    a_power, loc_power, scale_power = stats.powerlaw.fit(degrees, floc=0)
+    power_ccdf = 1 - stats.powerlaw.cdf(sorted_degrees, a=a_power, loc=loc_power, scale=scale_power)
+
+    # Plot CCDF
+    plt.subplot(1, 2, subplot_index)
+    plt.loglog(sorted_degrees, ccdf, 'o', alpha=0.7, label='Empirical CCDF')
+    plt.loglog(sorted_degrees, poisson_ccdf, '-', label='Poisson Fit')
+    plt.loglog(sorted_degrees, normal_ccdf, '-', label='Normal Fit')
+    plt.loglog(sorted_degrees, expon_ccdf, '-', label='Exponential Fit')
+    plt.loglog(sorted_degrees, power_ccdf, '-', label='Power-law Fit')
+
+    plt.title(f"{title} - CCDF with Fits")
+    plt.xlabel("Degree")
+    plt.ylabel("CCDF")
+    plt.legend()
+
+
 def main():
     save_path = "../results/task9"
     # task 1
@@ -200,8 +247,14 @@ def main():
     G_RND = nx.Graph(random_graph_edges)
     print_graph_info(G_RND, "Random")
 
-    plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path)
-    plot_cdf_ccdf(G_BA, G_RND, save_path)
+    # plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path)
+    # plot_cdf_ccdf(G_BA, G_RND, save_path)
+
+    plt.figure(figsize=(15, 7))
+    fit_and_plot_ccdf(G_BA, "Barabasi-Albert", 1)
+    fit_and_plot_ccdf(G_RND, "Random", 2)
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_path, 'ccdf_with_fits.png'))
 
 
 if __name__ == '__main__':
