@@ -102,7 +102,6 @@ def plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path):
     RND_degree_counts = np.bincount(RND_degrees)
     RND_degree_counts = RND_degree_counts[RND_degree_counts > 0]
 
-    # create 2x2 subplots
     fig, axes = plt.subplots(2, 2, figsize=(15, 15))
 
     # plot degree distribution for Barabasi-Albert graph
@@ -151,21 +150,25 @@ def plot_cdf_ccdf(G_BA, G_RND, save_path):
     # plot four subplots in 2 rows and 2 columns
     fig, axes = plt.subplots(2, 2, figsize=(15, 15))
 
-    # plot CDF for Barabasi-Albert graph
     axes[0, 0].plot(BA_degrees, cdf_BA, 'b-', marker='o')
     axes[0, 0].set_title('CDF - Barabasi-Albert')
+    axes[0, 0].set_xlabel('Degree')
+    axes[0, 0].set_ylabel('CDF')
 
-    # plot CCDF for Barabasi-Albert graph
     axes[0, 1].plot(BA_degrees, ccdf_BA, 'b-', marker='o')
     axes[0, 1].set_title('CCDF - Barabasi-Albert')
+    axes[0, 1].set_xlabel('Degree')
+    axes[0, 1].set_ylabel('CCDF')
 
-    # plot CDF for Random graph
     axes[1, 0].plot(RND_degrees, cdf_RND, 'r-', marker='o')
     axes[1, 0].set_title('CDF - Random')
+    axes[1, 0].set_xlabel('Degree')
+    axes[1, 0].set_ylabel('CDF')
 
-    # plot CCDF for Random graph
     axes[1, 1].plot(RND_degrees, ccdf_RND, 'r-', marker='o')
     axes[1, 1].set_title('CCDF - Random')
+    axes[1, 1].set_xlabel('Degree')
+    axes[1, 1].set_ylabel('CCDF')
 
     plt.tight_layout()
 
@@ -176,35 +179,22 @@ def plot_cdf_ccdf(G_BA, G_RND, save_path):
 
 
 def fit_and_plot_ccdf(graph, title, subplot_index):
-    """
-    Fit and plot CCDF with Poisson, Normal, Exponential, and Power-law fits.
-
-    Args:
-        graph: NetworkX graph object.
-        title: Title for the plot.
-        subplot_index: Subplot index for positioning.
-    """
-    # Compute degrees and sort them
-    degrees = np.array([d for _, d in graph.degree()])
-    sorted_degrees = np.sort(degrees)
+    degrees = np.array([d for _, d in graph.degree()])  # Get degrees of all nodes
+    sorted_degrees = np.sort(degrees)  # and sort them
 
     # Calculate CCDF
     ccdf = 1 - (np.arange(1, len(sorted_degrees) + 1) / len(sorted_degrees))
 
     # Fit distributions
-    # Poisson
     lambda_poisson = np.mean(degrees)
     poisson_ccdf = 1 - stats.poisson.cdf(sorted_degrees, mu=lambda_poisson)
 
-    # Normal
     mu_normal, sigma_normal = stats.norm.fit(degrees)
     normal_ccdf = 1 - stats.norm.cdf(sorted_degrees, loc=mu_normal, scale=sigma_normal)
 
-    # Exponential
     loc_expon, scale_expon = stats.expon.fit(degrees)
     expon_ccdf = 1 - stats.expon.cdf(sorted_degrees, loc=loc_expon, scale=scale_expon)
 
-    # Power-law
     a_power, loc_power, scale_power = stats.powerlaw.fit(degrees, floc=0)
     power_ccdf = 1 - stats.powerlaw.cdf(sorted_degrees, a=a_power, loc=loc_power, scale=scale_power)
 
@@ -247,12 +237,12 @@ def main():
     G_RND = nx.Graph(random_graph_edges)
     print_graph_info(G_RND, "Random")
 
-    # plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path)
-    # plot_cdf_ccdf(G_BA, G_RND, save_path)
+    plot_linear_and_log_degree_distributions(G_BA, G_RND, save_path)
+    plot_cdf_ccdf(G_BA, G_RND, save_path)
 
     plt.figure(figsize=(15, 7))
-    fit_and_plot_ccdf(G_BA, "Barabasi-Albert", 1)
-    fit_and_plot_ccdf(G_RND, "Random", 2)
+    fit_and_plot_ccdf(G_BA, f"Barabasi-Albert m={m}", 1)
+    fit_and_plot_ccdf(G_RND, f"Random p={p}", 2)
     plt.tight_layout()
     plt.savefig(os.path.join(save_path, 'ccdf_with_fits.png'))
 
