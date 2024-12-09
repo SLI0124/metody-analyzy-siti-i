@@ -150,13 +150,13 @@ def plot_degree_distribution(G: nx.Graph, m: int, file_name: str, directory_pref
 
 def check_graph_properties(G: nx.Graph, graph_name: str):
     if has_graph_loops(G) and has_graph_multi_edges(G):
-        raise ValueError(f"{graph_name} has loops and multi-edges")
+        raise ValueError(f"{graph_name} graph has loops and multi-edges")
     elif has_graph_loops(G):
-        raise ValueError(f"{graph_name} has loops")
+        raise ValueError(f"{graph_name} graph has loops")
     elif has_graph_multi_edges(G):
-        raise ValueError(f"{graph_name} has multi-edges")
+        raise ValueError(f"{graph_name} graph has multi-edges")
     else:
-        print(f"{graph_name} has no loops or multi-edges\n")
+        print(f"{graph_name} graph has no loops or multi-edges\n")
 
 
 def main():
