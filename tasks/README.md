@@ -116,3 +116,25 @@ Naimplementujte (tj. sami, nesmíte použít žádnou knihovní funkci) model pr
       rozdělení.
     - Vykresli CCDF s překrytými fitovanými rozděleními.
 
+## Cvičení 10
+
+Odolnost
+
+1. Pro síť s desetitisíci vrcholy vygenerovanou podle modelu preferenčního připojování s m = 2
+   určete:
+    - Počet komponent souvislosti
+    - Velikost největší komponenty souvislosti (měřenou počtem vrcholů)
+    - Průměrnou vzdálenost (průměrnou délku nejkratší cesty) spočítanou takto:
+      $d_L = \frac{\sum_i \sum_{j \gt i} d(v_i, v_j)}{\binom{n}{2}} =
+      \frac{2}{n(n-1)} \sum_i \sum_{j \gt i} d(v_i, v_j)$
+    - Průměrný stupeň
+2. Simulujte odolnost sítě proti rozpadu
+    - Cíleným odebíráním vrcholů s největším stupněm
+    - Odebíráním náhodných vrcholů. Náhodně odebírejte vrcholy tak dlouho, dokud
+      nedosáhnete stejného stavu rozpadu sítě jako odebíráním dle 2a). Nicméně oba
+      způsoby odebírání můžete provádět „až do konce“.
+3. Po každém odebrání vrcholu podle 2a) nebo 2b) změřte vlastnosti uvedené v bodu 1.
+4. Výsledky znázorněte graficky (viz grafy na snímcích 37 a 38) v prezentaci z přednášky) –
+   velikost největší komponenty souvislosti, průměrná vzdálenost, průměrný stupeň.
+   V jednom obrázku bude vždy jak simulace útoku, tak i simulace selhání pro použitou
+   datovou sadu.
