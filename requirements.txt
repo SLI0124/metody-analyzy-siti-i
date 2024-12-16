@@ -4,3 +4,4 @@ numpy
 pandas
 tabulate
 scipy
+python-louvain
