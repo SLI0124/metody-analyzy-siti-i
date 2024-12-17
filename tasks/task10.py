@@ -9,7 +9,7 @@ from task7 import (create_barabasi_albert_graph,
                    STARTING_NODES_COUNT_RANGE)
 
 
-def remove_nodes(graph, strategy, graph_name="Unknown"):
+def remove_nodes(graph, strategy, graph_name):
     """Remove nodes from the graph based on the given strategy and return metrics."""
     nodes = list(graph.nodes())
     removed_count = 0
@@ -85,27 +85,32 @@ def plot_results(results_ba, results_random, subplot_index, row_offset):
     # Ensure results are aligned by the number of nodes removed
     ba_removed_count, ba_largest_cc_sizes, ba_avg_shortest_paths = zip(*results_ba)
     random_removed_count, random_largest_cc_sizes, random_avg_shortest_paths = zip(*results_random)
-
-    # x_values are the number of nodes removed
     x_values = list(ba_removed_count)
+
+    top_titles = ["BA Graph High Degree Removal", "Random Graph High Degree Removal",
+                  "BA Graph Random Removal", "Random Graph Random Removal"]
+    bottom_titles = ["BA Graph High Degree - Avg Path Length", "Random Graph High Degree - Avg Path Length",
+                     "BA Graph Random - Avg Path Length", "Random Graph Random - Avg Path Length"]
 
     # Top row: Relative size
     plt.subplot(2, 2, subplot_index + row_offset)
     plt.plot(x_values, ba_largest_cc_sizes, label="BA Graph", color='blue')
     plt.plot(x_values, random_largest_cc_sizes, label="Random Graph", color='orange')
-    plt.title("Relative Size", fontsize=12)
-    plt.xlabel("Nodes Removed")
-    plt.ylabel("Relative Size")
+    plt.title(top_titles[subplot_index - 1], fontsize=14)
+    plt.xlabel("Nodes Removed", fontsize=12)
+    plt.ylabel("Relative Size", fontsize=12)
     plt.legend()
+    plt.grid(True)
 
     # Bottom row: Average path length
     plt.subplot(2, 2, subplot_index + row_offset + 2)
     plt.plot(x_values, ba_avg_shortest_paths, label="BA Graph", color='blue')
     plt.plot(x_values, random_avg_shortest_paths, label="Random Graph", color='orange')
-    plt.title("Avg Path Length", fontsize=12)
-    plt.xlabel("Nodes Removed")
-    plt.ylabel("Path Length")
+    plt.title(bottom_titles[subplot_index - 1], fontsize=14)
+    plt.xlabel("Nodes Removed", fontsize=12)
+    plt.ylabel("Path Length", fontsize=12)
     plt.legend()
+    plt.grid(True)
 
 
 def setup_plot():
@@ -113,11 +118,10 @@ def setup_plot():
     plt.figure(figsize=(14, 10))  # Set the figure size (width, height)
 
 
-def save_plot():
+def save_plot(number_of_nodes):
     """Save the plot to a file."""
-    save_path = "../results/tas10/"
-    file_name = "task10.png"
-
+    save_path = "../results/task10/"
+    file_name = f"task10_{number_of_nodes}_nodes.png"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -125,7 +129,7 @@ def save_plot():
 
 
 def main():
-    n = 10_000
+    n = 1_000
     m = 2
     p = 0.015
 
@@ -156,7 +160,7 @@ def main():
     setup_plot()
     plot_results(ba_high_deg_results, random_high_deg_results, 1, 0)
     plot_results(ba_random_results, random_random_results, 2, 0)
-    save_plot()
+    save_plot(n)
 
 
 if __name__ == "__main__":
