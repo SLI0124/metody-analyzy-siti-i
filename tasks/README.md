@@ -12,20 +12,20 @@ histogram těchto četností (sloupcový graf, kde na ose x je stupeň a na ose 
 Zadání cvičení - implementujte vše sami, stačí konzolová aplikace. Pro Karate Club určete vzdálenost (délku nejkratší
 cesty) mezi všemi dvojicemi vrcholů
 
-$$e(v_i) = max_j{d(v_i, v_j)}$$
+$$ e(v_i) = \max_{j} \{ d(v_i, v_j) \} $$
 
 průměrnou vzdálenost:
 
-$$ \frac{2}{n(n-1)} \sum_{i=1}^{n} \sum_{j>i}^{n} d(i,j) $$
+$$ \frac{2}{n(n-1)} \sum_{i=1}^{n} \sum_{j>i}^{n} d(v_i,v_j) $$
 
 a průměr:
 
-$$ d(G) max_i{e(v_i)} = max_i,j{d(v_i, v_j)} $$
+$$ d(G) = \max_{i} \{ e(v_i) \} = \max_{i,j} \{ d(v_i, v_j) \} $$
 
 Budete potřebovat [Floydův algoritmus](https://www.youtube.com/watch?v=4OQeCuLYj-4). Dále určete closeness centralitu
 každého vrcholu:
 
-$$C(i) = \frac{n}{\sum_{j=1}^{n} d(i,j)}$$
+$$ C(i) = \frac{1}{l_i} = \frac{n}{\sum\limits_{j} d_{ij}} $$
 
 ## Cvíčení 3
 
