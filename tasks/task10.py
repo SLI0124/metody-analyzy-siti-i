@@ -129,7 +129,7 @@ def save_plot(number_of_nodes):
 
 
 def main():
-    n = 1_000
+    n = 10_000
     m = 2
     p = 0.015
 
